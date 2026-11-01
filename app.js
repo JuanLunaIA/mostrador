@@ -42,7 +42,19 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: '100kb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+// Cache por tipo: las imagenes son inmutables (7 dias), el CSS cambia entre deploys (1 h).
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    if (['.png', '.svg', '.jpg', '.jpeg', '.webp', '.ico'].includes(ext)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    } else if (ext === '.css') {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=300');
+    }
+  },
+}));
 
 app.locals.EMAIL_MODE = (process.env.EMAIL_MODE || 'mock').toLowerCase();
 app.locals.AI_LIVE = Boolean(process.env.OPENAI_API_KEY);

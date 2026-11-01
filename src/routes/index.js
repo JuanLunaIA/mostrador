@@ -31,6 +31,10 @@ router.get('/impacto', (req, res) => {
 
 router.get('/contratar', (req, res) => res.render('contratar', { title: 'Contratar Mostrador', desc: 'Tres planes para llevar Mostrador a tu ferretería, con lo que incluye y lo que no. Precios a definir y estado real del producto.', canonical: '/contratar' }));
 
+const titular = require('../../config/titular.json');
+router.get('/terminos', (req, res) => res.render('terminos', { t: titular, title: 'Términos y condiciones', canonical: '/terminos' }));
+router.get('/privacidad', (req, res) => res.render('privacidad', { t: titular, title: 'Política de privacidad', canonical: '/privacidad' }));
+
 router.get('/outbox/:token', (req, res) => {
   const f = rutaOutbox(OUTBOX, req.params.token);
   if (!f || !fs.existsSync(f)) return res.status(404).send('sin email en modo mock para ese token');

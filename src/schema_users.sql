@@ -21,7 +21,10 @@ CREATE TABLE IF NOT EXISTS users_sessions (
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   expires_at TEXT NOT NULL,
   revoked_at TEXT,
-  user_agent TEXT
+  user_agent TEXT,
+  -- Token CSRF de la sesión. Se genera junto con la sesión y viaja en un campo
+  -- oculto del formulario; nunca se escribe en una cookie legible por JS.
+  csrf_token TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_sessions_user ON users_sessions(user_id);

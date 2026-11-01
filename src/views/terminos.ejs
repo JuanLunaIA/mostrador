@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head><%- include('partials/head', { title: 'Términos y condiciones', desc: 'Términos y condiciones de uso de Mostrador. Alcance, responsabilidad por precios, presupuestos y tratamiento de datos.', canonical: '/terminos' }) %></head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+      <a href="/" class="font-extrabold">Mostrador <span class="text-xs font-normal text-slate-400">· <%= t.razon_social %></span></a>
+      <a href="/" class="text-sm text-slate-500 hover:text-slate-900">← Volver</a>
+    </div>
+  </header>
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Legal</p>
+    <h1 class="mt-1 text-3xl font-extrabold">Términos y condiciones</h1>
+    <p class="mt-2 text-sm text-slate-500">Última actualización: 1 de noviembre de 2026 · Titular: <%= t.razon_social %> · <%= t.jurisdiccion %></p>
+
+    <section class="mt-8 space-y-2">
+      <h2 class="text-lg font-bold">1. Qué es Mostrador</h2>
+      <p>Mostrador es una herramienta que convierte un mensaje de pedido en un presupuesto con precios del catálogo de <%= t.razon_social %>. No es una tienda online ni una plataforma de pagos: no se cobra nada por este sitio ni se reciben pagos a través de él.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="text-lg font-bold">2. Valor de los presupuestos</h2>
+      <p>Los precios que aparecen en un presupuesto salen del catálogo cargado por el comercio y pueden variar por disponibilidad, cantidad o fecha. Un presupuesto no es una factura ni un contrato de venta: es una cotización indicativa. La venta se perfecciona con el comercio por los canales habituales (teléfono, WhatsApp o en el local).</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">3. Vigencia</h2>
+      <p>Cada presupuesto indica su fecha de emisión y una vigencia de referencia de siete días. Pasada la vigencia, los precios pueden haberse actualizado.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">4. Intervención humana y revisión</h2>
+      <p>Cuando Mostrador no está seguro de haber interpretado un ítem, lo marca como <strong>revisar</strong> y no le asigna precio. Antes de usar un presupuesto para una operación importante, el personal del comercio puede revisarlo y corregirlo. El sistema no sustituye la responsabilidad del comercio sobre sus propias cotizaciones.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">5. Correo electrónico</h2>
+      <p>El envío del presupuesto por email puede funcionar en modo de prueba. Cuando el modo real esté activo, el remitente será una dirección del comercio con el dominio verificado. No se usa la dirección del cliente para nada que no sea enviarle el presupuesto que pidió.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">6. Privacidad</h2>
+      <p>El tratamiento de los datos personales se rige por la <a class="underline" href="/privacidad">política de privacidad</a>, que es parte de estos términos.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">7. Disponibilidad</h2>
+      <p>Mostrador se ofrece tal cual está, sin garantía de disponibilidad continua. No nos hacemos responsables por interrupciones del servicio, pérdidas causadas por información desactualizada ni por el uso que cada comercio haga de los presupuestos generados.</p>
+    </section>
+
+    <section class="mt-6 space-y-2">
+      <h2 class="mt-6 text-lg font-bold">8. Jurisdicción y contacto</h2>
+      <p>Estos términos se rigen por las leyes de la República Argentina. Cualquier consulta: <a class="underline" href="mailto:<%= t.email_contacto %>"><%= t.email_contacto %></a>.</p>
+      <p class="text-xs text-slate-400"><%= t.razon_social %> · <%= t.domicilio %> · CUIT <%= t.cuit %></p>
+    </section>
+  </main>
+</body>
+</html>

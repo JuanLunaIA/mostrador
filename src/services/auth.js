@@ -64,6 +64,12 @@ function assertEnabled() {
 function applySchema(db) {
   if (!db || typeof db.exec !== 'function') throw new TypeError('applySchema(db): falta un handle de base');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  // Bases creadas antes de que existiera csrf_token: CREATE TABLE IF NOT EXISTS
+  // no agrega columnas, así que la suma explícita es la migración.
+  const columnas = db.prepare('pragma table_info(users_sessions)').all().map((c) => c.name);
+  if (!columnas.includes('csrf_token')) {
+    db.exec('alter table users_sessions add column csrf_token text');
+  }
 }
 
 function normalizeEmail(email) {
@@ -210,26 +216,27 @@ function createSession(db, userId, { ttlMs = SESSION_TTL_MS, now = Date.now(), u
   if (!user) throw new AuthError('USER_NOT_FOUND', 'No existe el usuario.');
 
   const token = crypto.randomBytes(SESSION_TOKEN_BYTES).toString('base64url');
+  const csrfToken = crypto.randomBytes(SESSION_TOKEN_BYTES).toString('base64url');
   const createdAt = new Date(now).toISOString();
   const expiresAt = new Date(now + ttlMs).toISOString();
   const agent = typeof userAgent === 'string' ? userAgent.slice(0, 255) : null;
 
-  db.prepare('insert into users_sessions (token_hash, user_id, created_at, expires_at, user_agent) values (?,?,?,?,?)')
-    .run(hashToken(token), userId, createdAt, expiresAt, agent);
+  db.prepare('insert into users_sessions (token_hash, user_id, created_at, expires_at, user_agent, csrf_token) values (?,?,?,?,?,?)')
+    .run(hashToken(token), userId, createdAt, expiresAt, agent, csrfToken);
 
-  return { token, expiresAt };
+  return { token, expiresAt, csrfToken };
 }
 
 /**
- * Devuelve el usuario dueño de una sesión válida, o null si el token no
- * existe, está vencido, fue revocado o el usuario está deshabilitado.
+ * Igual que validateSession pero devuelve también el token CSRF de la sesión,
+ * que es lo que necesitan los formularios. null si la sesión no sirve.
  */
-function validateSession(db, token, { now = Date.now() } = {}) {
+function getSession(db, token, { now = Date.now() } = {}) {
   assertEnabled();
   if (typeof token !== 'string' || !SESSION_TOKEN_RE.test(token)) return null;
 
   const row = db.prepare(`
-    select s.token_hash, s.expires_at, s.revoked_at,
+    select s.csrf_token, s.expires_at, s.revoked_at,
            u.id, u.email, u.nombre, u.created_at, u.disabled_at
       from users_sessions s
       join users_users u on u.id = s.user_id
@@ -241,7 +248,58 @@ function validateSession(db, token, { now = Date.now() } = {}) {
   if (row.disabled_at !== null) return null;
   if (Date.parse(row.expires_at) <= now) return null;
 
-  return publicUser(row);
+  return { user: publicUser(row), csrfToken: row.csrf_token || null };
+}
+
+/**
+ * Devuelve el usuario dueño de una sesión válida, o null si el token no
+ * existe, está vencido, fue revocado o el usuario está deshabilitado.
+ */
+function validateSession(db, token, { now = Date.now() } = {}) {
+  const found = getSession(db, token, { now });
+  return found ? found.user : null;
+}
+
+/** Cambia email y nombre. El email se normaliza y sigue siendo único. */
+function updateUserProfile(db, userId, { email, nombre = null } = {}) {
+  assertEnabled();
+  const normalizedEmail = normalizeEmail(email);
+  if (nombre !== null && (typeof nombre !== 'string' || nombre.trim().length > 120)) {
+    throw new AuthError('INVALID_NAME', 'Nombre inválido.');
+  }
+  const dueno = db.prepare('select id from users_users where email = ?').get(normalizedEmail);
+  if (dueno && Number(dueno.id) !== Number(userId)) {
+    throw new AuthError('EMAIL_TAKEN', 'Ya existe una cuenta con ese email.');
+  }
+  const result = db.prepare('update users_users set email = ?, nombre = ? where id = ?')
+    .run(normalizedEmail, nombre && nombre.trim() ? nombre.trim() : null, userId);
+  if (!Number(result.changes)) throw new AuthError('USER_NOT_FOUND', 'No existe el usuario.');
+  return publicUser(db.prepare('select id, email, nombre, created_at from users_users where id = ?').get(userId));
+}
+
+/** Guarda un hash nuevo. El hash lo calcula quien llama (auth.hashPassword). */
+function updatePasswordHash(db, userId, passwordHash) {
+  assertEnabled();
+  if (typeof passwordHash !== 'string' || !passwordHash.startsWith('scrypt$')) {
+    throw new AuthError('INVALID_HASH', 'Hash de contraseña inválido.');
+  }
+  const result = db.prepare('update users_users set password_hash = ? where id = ?').run(passwordHash, userId);
+  if (!Number(result.changes)) throw new AuthError('USER_NOT_FOUND', 'No existe el usuario.');
+  return true;
+}
+
+/**
+ * Revoca todas las sesiones del usuario menos la actual (si se pasa su hash).
+ * Se usa al cambiar la contraseña: si alguien más tenía la cuenta abierta, se cae.
+ */
+function revokeUserSessions(db, userId, { exceptTokenHash = null, now = Date.now() } = {}) {
+  assertEnabled();
+  if (exceptTokenHash) {
+    return Number(db.prepare('update users_sessions set revoked_at = ? where user_id = ? and token_hash <> ? and revoked_at is null')
+      .run(new Date(now).toISOString(), userId, exceptTokenHash).changes);
+  }
+  return Number(db.prepare('update users_sessions set revoked_at = ? where user_id = ? and revoked_at is null')
+    .run(new Date(now).toISOString(), userId).changes);
 }
 
 /** Revoca una sesión. Devuelve true si efectivamente la cerró. */
@@ -264,7 +322,12 @@ module.exports = {
   hashToken,
   createUser,
   findUserByEmail,
+  findUserRowByEmail,
   createSession,
+  getSession,
   validateSession,
   revokeSession,
+  revokeUserSessions,
+  updateUserProfile,
+  updatePasswordHash,
 };
