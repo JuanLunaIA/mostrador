@@ -1,0 +1,26 @@
+{
+  "generated": "2026-11-01",
+  "project": "mostrador",
+  "digests": [
+    { "file": "01-reglamento-y-pesos.md", "topic": "Reglamento del hackaton, entregables, regla de exclusion, pesos 35/30/25/10" },
+    { "file": "02-jurado.md", "topic": "Perfiles del jurado y que premia cada uno" },
+    { "file": "03-datos-indec-caf.md", "topic": "Datos INDEC y CAF verificados contra PDF primario; retractacion del 45%" },
+    { "file": "04-donweb-ecosistema.md", "topic": "Productos DonWeb y contrato de la API de EnvialoSimple" },
+    { "file": "05-deploy-oficial.md", "topic": "Proceso oficial de deploy en Cloud Server y sus cuatro trampas" }
+  ],
+  "raw": [
+    { "file": "Informe2.pdf", "source": "INDEC, EPH 2do trimestre 2026", "note": "Cuadro 3.2 verificado: Gran Rosario 11,5% desocupacion" },
+    { "file": "Informe1.pdf", "source": "CAF, Las pymes en Argentina (2024)" },
+    { "file": "C4 model.pdf", "source": "Garcia-Penalvo et al., Modelo C4, Universidad de Salamanca 2023/24" },
+    { "file": "informe3.html", "source": "Template arc42 renderizado con Asciidoctor" }
+  ],
+  "sources": [
+    "https://donwebday.com/hackaton/",
+    "https://donweb.com/es-int/cloud-server-con-despliegue-ia",
+    "https://soporte.donweb.com/hc/es/articles/25415036242580-Env%C3%ADaloSimple-Transaccional",
+    "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-58",
+    "https://scioteca.caf.com/bitstream/handle/123456789/2199/CAF-Pymes%20ARG.pdf",
+    "https://c4model.com/",
+    "https://arc42.org/overview/"
+  ]
+}
