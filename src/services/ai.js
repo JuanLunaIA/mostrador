@@ -212,29 +212,43 @@ async function extractOrder(rawText) {
       meta: { mode: 'degraded', model: null, latency_ms: 0, prompt_tokens: 0, completion_tokens: 0, repair_attempts: 0, error: 'OPENAI_API_KEY ausente' },
     };
   }
-  const model = await pickModel(api);
+
+  // Con una clave compartida no sabemos qué modelos habilita: probamos en orden
+  // hasta que uno responda. Un 404/403 de modelo NO debe tirar el demo a degradado.
+  const preferido = await pickModel(api);
+  const candidatos = [preferido, ...PREFERRED.filter((m) => m !== preferido)];
+
   let repair = 0;
-  try {
-    let { parsed, meta } = await callModel(api, model, rawText);
-    let v = validar(parsed);
-    if (!v.ok) {
-      repair = 1;
-      const fix = await callModel(api, model, rawText, [
-        { role: 'assistant', content: JSON.stringify(parsed) },
-        { role: 'user', content: `Tu salida no cumple el schema. Errores: ${JSON.stringify(v.issues).slice(0, 800)}. Devolvé SOLO el JSON corregido.` },
-      ]);
-      meta = { ...meta, latency_ms: meta.latency_ms + fix.meta.latency_ms };
-      parsed = fix.parsed;
-      v = validar(parsed);
+  let ultimoError = null;
+
+  for (const model of candidatos) {
+    try {
+      let { parsed, meta } = await callModel(api, model, rawText);
+      let v = validar(parsed);
+      if (!v.ok) {
+        repair = 1;
+        const fix = await callModel(api, model, rawText, [
+          { role: 'assistant', content: JSON.stringify(parsed) },
+          { role: 'user', content: `Tu salida no cumple el schema. Errores: ${JSON.stringify(v.issues).slice(0, 800)}. Devolvé SOLO el JSON corregido.` },
+        ]);
+        meta = { ...meta, latency_ms: meta.latency_ms + fix.meta.latency_ms };
+        parsed = fix.parsed;
+        v = validar(parsed);
+      }
+      if (!v.ok) throw new Error('schema_invalido_tras_reparacion');
+      return { data: v.data, meta: { ...meta, mode: 'live', repair_attempts: repair, error: null } };
+    } catch (err) {
+      const msg = String(err.message || err);
+      ultimoError = msg;
+      const esModelo = /model|does not exist|not found|permission|unsupported|404/i.test(msg);
+      if (!esModelo) break; // timeout, red, cuota: no tiene sentido probar otro modelo
     }
-    if (!v.ok) throw new Error('schema_invalido_tras_reparacion');
-    return { data: v.data, meta: { ...meta, mode: 'live', repair_attempts: repair, error: null } };
-  } catch (err) {
-    return {
-      data: degradeExtract(rawText),
-      meta: { mode: 'degraded', model, latency_ms: 0, prompt_tokens: 0, completion_tokens: 0, repair_attempts: repair, error: String(err.message || err).slice(0, 300) },
-    };
   }
+
+  return {
+    data: degradeExtract(rawText),
+    meta: { mode: 'degraded', model: preferido, latency_ms: 0, prompt_tokens: 0, completion_tokens: 0, repair_attempts: repair, error: String(ultimoError || 'sin modelo disponible').slice(0, 300) },
+  };
 }
 
 module.exports = { extractOrder, degradeExtract, validar, SalidaSchema, JSON_SCHEMA, SYSTEM_PROMPT, getClient, pickModel };
