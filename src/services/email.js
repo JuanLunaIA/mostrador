@@ -60,12 +60,14 @@ async function sendQuoteEmail(quote, to, publicUrl) {
     process.env.ENVIALOSIMPLE_BASE || 'https://api.envialosimple.email',
     'https://backend.envialosimple.email',
   ];
+  // Solo los campos que documenta la fuente autoritativa (context/raw/EnvíaloSimple…md):
+  // from, to, subject, html. Sin preview_text ni substitutions: no aportan al demo
+  // y cada campo extra es una forma más de que la API rechace el envío.
   const body = JSON.stringify({
     from: process.env.ENVIALOSIMPLE_FROM,
     to: [{ email: to }],
     subject,
     html,
-    preview_text: `Presupuesto por $${quote.total_ars.toLocaleString('es-AR')} — Ferretería San Luis`,
   });
 
   let lastErr = null;

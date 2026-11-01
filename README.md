@@ -134,6 +134,20 @@ $ npm run evals
 | `me pasas precio de 2 baldes de latex 20 litros y 3 brochas del 2?` | PIN-LAT20 ×2 → $117.800 · BRO-2 ×3 → $9.600 · **Total $127.400** |
 | ` ` (vacío) | **HTTP 422** `{error:{code:"texto_requerido"}}` — nunca un 500 |
 
+### La defensa se prueba, no se afirma
+
+`tests/guard.test.js` demuestra estructuralmente que el modelo **no puede** fijar precios ni ser inyectado, incluso si responde algo hostil. No hace falta la API key para correrla:
+
+```
+✔ respuesta hostil del modelo: los precios inventados se ignoran     → 200 × $45 = $9.000, no el $1 que devolvió el "modelo"
+✔ inyeccion de prompt en la descripcion no altera otros items        → el ítem envenenado queda en 0 y "revisar"; el legítimo conserva $98.000
+✔ el schema estricto rechaza una salida sin los campos requeridos
+✔ el schema acepta una salida valida y la normaliza
+✔ cantidad no positiva se rechaza en validacion
+```
+
+Es la diferencia entre decir "usamos structured outputs" y probar que el importe que ve el cliente **siempre** sale de la tabla `products`.
+
 **Modo degradado:** sin `OPENAI_API_KEY` la app funciona igual con un extractor por reglas y **lo dice en pantalla** (badge ámbar "modo degradado" + `error: OPENAI_API_KEY ausente` visible en el panel de auditoría). No finge que hay IA cuando no la hay.
 
 ---
@@ -194,9 +208,11 @@ npm install
 cp .env.example .env      # OPENAI_API_KEY opcional: sin ella arranca en modo degradado
 node src/seed.js          # 15 productos de ferretería
 npm start                 # http://127.0.0.1:3000
-npm test                  # 7 tests (db, matcher, extractor)
+npm test                  # 12 tests (db, matcher, extractor, guard de precios)
 npm run evals             # 5 casos dorados contra el servidor corriendo
 ```
+
+El proceso escucha en `127.0.0.1:3000` por defecto (regla del deploy oficial de DonWeb: sólo nginx se expone a internet). Para probar desde otro dispositivo de la red local: `HOST=0.0.0.0 npm start`.
 
 ### Variables de entorno
 
@@ -209,6 +225,8 @@ npm run evals             # 5 casos dorados contra el servidor corriendo
 | `ENVIALOSIMPLE_API_KEY` | vacío | necesaria para `EMAIL_MODE=live` |
 | `ENVIALOSIMPLE_FROM` | vacío | remitente de un dominio verificado en la cuenta |
 | `DB_PATH` | `data/mostrador.sqlite` | archivo SQLite (WAL) |
+| `HOST` | `127.0.0.1` | interfaz de escucha; `0.0.0.0` sólo para prueba en red local |
+| `RATE_LIMIT` | activo | `off` desactiva los topes por IP (para correr evals) |
 
 ---
 
@@ -224,6 +242,7 @@ npm run evals             # 5 casos dorados contra el servidor corriendo
 
 - El matcher es léxico (tokens + stemming). No resuelve sinónimos ("tirafondo" ≠ "tornillo" si el alias no lo lista) ni unidades implícitas.
 - Sin autenticación: cualquiera con la URL puede generar presupuestos. Aceptable para la demo, **no** para un piloto real.
+- El rate limit es en memoria y por IP: se reinicia con el proceso y no se comparte entre instancias. Sirve para no quemar la clave compartida, no como control de abuso serio.
 - El extractor degradado falla con pedidos sin cantidad explícita en orden invertido complejo.
 - SQLite de un solo archivo: no soporta más de un proceso escribiendo.
-- Sin rate limit en `/api/quotes` (una clave de OpenAI compartida + sin límite = un mal demo).
+- El baseline de 20 minutos por presupuesto **no está medido**: es el supuesto más riesgoso del caso de negocio.

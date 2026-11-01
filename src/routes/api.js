@@ -4,8 +4,14 @@ const { crearPresupuesto, getByToken, marcarEnviado } = require('../services/pre
 const { sendQuoteEmail } = require('../services/email');
 const impact = require('../services/impact');
 const { db, driver } = require('../db');
+const { rateLimit } = require('../lib/rateLimit');
 
 const router = express.Router();
+
+// topes por IP: generar gasta tokens, enviar email gasta créditos de EnvíaloSimple
+const limiteCrear = rateLimit({ nombre: 'quotes', max: 30 });
+const limiteEnviar = rateLimit({ nombre: 'send', max: 10 });
+
 
 router.get('/healthz', (req, res) => {
   res.json({
@@ -17,7 +23,7 @@ router.get('/healthz', (req, res) => {
   });
 });
 
-router.post('/quotes', async (req, res, next) => {
+router.post('/quotes', limiteCrear, async (req, res, next) => {
   try {
     const texto = String(req.body?.texto || '').trim();
     if (!texto) {
@@ -34,7 +40,7 @@ router.get('/quotes/:token', (req, res) => {
   res.json({ quote: q });
 });
 
-router.post('/quotes/:token/send', async (req, res, next) => {
+router.post('/quotes/:token/send', limiteEnviar, async (req, res, next) => {
   try {
     const q = getByToken(req.params.token);
     if (!q) return res.status(404).json({ error: { code: 'not_found', message: 'Presupuesto inexistente' } });

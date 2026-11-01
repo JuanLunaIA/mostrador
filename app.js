@@ -19,6 +19,7 @@ if (fs.existsSync(path.join(__dirname, 'src', 'schema.sql'))) {
 }
 
 const app = express();
+app.set('trust proxy', 1); // detras de nginx: la IP real viene en X-Forwarded-For
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.urlencoded({ extended: false }));
@@ -42,6 +43,10 @@ app.use((err, req, res, _next) => {
 });
 
 const PORT = Number(process.env.PORT || 3000);
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`mostrador escuchando en http://127.0.0.1:${PORT} (db=${driver} ${DB_PATH}, ai=${app.locals.AI_LIVE ? 'live' : 'degraded'}, email=${app.locals.EMAIL_MODE})`);
+// Regla 5 del prompt oficial de DonWeb: los servicios internos escuchan SOLO en
+// 127.0.0.1; a internet se expone unicamente nginx. Se puede abrir con HOST=0.0.0.0
+// para pruebas en red local.
+const HOST = process.env.HOST || '127.0.0.1';
+app.listen(PORT, HOST, () => {
+  console.log(`mostrador escuchando en http://${HOST}:${PORT} (db=${driver} ${DB_PATH}, ai=${app.locals.AI_LIVE ? 'live' : 'degraded'}, email=${app.locals.EMAIL_MODE})`);
 });
