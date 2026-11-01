@@ -64,7 +64,7 @@ router.use((req, res, next) => {
  * ya no sirve (vencido, revocado, usuario deshabilitado) la borra.
  * res.locals.csrf es el token que va en el campo oculto de los formularios.
  */
-router.use((req, res, next) => {
+function cargarSesion(req, res, next) {
   const token = session.readSessionToken(req);
   const encontrada = token ? auth.getSession(db, token) : null;
   req.sesionToken = encontrada ? token : null;
@@ -74,7 +74,8 @@ router.use((req, res, next) => {
   res.locals.csrf = req.csrfSesion || session.ensureCsrfCookie(req, res);
   res.locals.usuario = req.usuario;
   next();
-});
+}
+router.use(cargarSesion);
 
 /** Sólo entra con sesión válida; si no, al login. */
 function exigirSesion(req, res, next) {
@@ -222,3 +223,6 @@ router.post('/config/password', exigirSesion, exigirCsrf, (req, res) => {
 });
 
 module.exports = router;
+// Se monta tambien suelto, antes del router del sitio, para que el index sepa
+// si hay sesion y pueda mostrar Mi cuenta / Salir.
+module.exports.cargarSesion = cargarSesion;

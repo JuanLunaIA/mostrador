@@ -17,6 +17,19 @@
     </div>
     <nav class="flex items-center gap-3 text-sm">
       <a href="/impacto" class="text-slate-600 hover:text-slate-900">Impacto</a>
+      <a href="/contratar" class="text-slate-600 hover:text-slate-900">Contratar</a>
+      <% if (typeof AUTH_ON !== 'undefined' && AUTH_ON) { %>
+        <% if (locals.usuario) { %>
+          <a href="/config" class="text-slate-600 hover:text-slate-900">Mi cuenta</a>
+          <form method="post" action="/logout" class="inline">
+            <input type="hidden" name="_csrf" value="<%= locals.csrf || '' %>">
+            <button type="submit" class="text-slate-600 hover:text-slate-900">Salir</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="text-slate-600 hover:text-slate-900">Ingresar</a>
+          <a href="/registro" class="rounded-lg bg-slate-900 px-3 py-1.5 font-semibold text-white hover:bg-slate-700">Crear cuenta</a>
+        <% } %>
+      <% } %>
       <span id="mode-badge" class="badge badge-sm <%= AI_LIVE ? 'badge-success' : 'badge-warning' %>"><%= AI_LIVE ? 'IA en vivo' : 'modo degradado' %></span>
     </nav>
   </div>

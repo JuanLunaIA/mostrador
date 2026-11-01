@@ -25,6 +25,7 @@ app.set('trust proxy', 1); // detras de nginx: la IP real viene en X-Forwarded-F
 // tablas users_* ni se monta ninguna ruta nueva. Se enciende sólo a pedido.
 const auth = require('./src/services/auth');
 if (auth.isEnabled()) auth.applySchema(db);
+app.locals.AUTH_ON = auth.isEnabled();
 
 // Cabeceras de seguridad. La app no carga nada de terceros (el CSS se compila y se
 // sirve local), pero usa <style> y <script> inline, de ahi el 'unsafe-inline'.
@@ -64,12 +65,17 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.locals.EMAIL_MODE = (process.env.EMAIL_MODE || 'mock').toLowerCase();
 app.locals.AI_LIVE = Boolean(process.env.OPENAI_API_KEY);
 
+// Con cuentas encendidas, la sesion se carga ANTES de las rutas del sitio: si no,
+// el index no sabe si hay usuario y ofrece "Ingresar" a alguien que ya entro.
+const authRouter = auth.isEnabled() ? require('./src/routes/auth') : null;
+if (authRouter) app.use(authRouter.cargarSesion);
+
 app.use('/', require('./src/routes/index'));
 app.use('/api', require('./src/routes/api'));
 
 // Cuentas de usuario: el router se monta SOLO con el flag encendido.
-if (auth.isEnabled()) {
-  app.use('/', require('./src/routes/auth'));
+if (authRouter) {
+  app.use('/', authRouter);
 } else {
   // Con las cuentas apagadas esas URLs no existen: misma página 404 del sitio,
   // sin formularios ni pistas de que el módulo está esperando el flag.
