@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head><%- include('partials/head', { title: 'Mostrador IA' }) %></head>
+<body class="bg-slate-50 min-h-screen">
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto max-w-3xl px-5 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="grid h-9 w-9 place-items-center rounded-xl bg-slate-900 text-white font-black">M</span>
+      <div>
+        <div class="font-bold leading-tight">Mostrador</div>
+        <div class="text-xs text-slate-500 leading-tight">Ferretería San Luis · Rosario</div>
+      </div>
+    </div>
+    <nav class="flex items-center gap-3 text-sm">
+      <a href="/impacto" class="text-slate-600 hover:text-slate-900">Impacto</a>
+      <span id="mode-badge" class="badge badge-sm <%= AI_LIVE ? 'badge-success' : 'badge-warning' %>"><%= AI_LIVE ? 'IA en vivo' : 'modo degradado' %></span>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-3xl px-5 py-8">
+  <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Del WhatsApp al presupuesto enviado.</h1>
+  <p class="mt-2 text-slate-600">Pegá el mensaje del cliente tal como llegó. Mostrador extrae los ítems, los cotiza contra el catálogo real y te deja el presupuesto listo para mandar.</p>
+
+  <div class="mt-4 grid grid-cols-3 gap-3">
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+      <div class="text-xs uppercase tracking-wider text-slate-400">Presupuestos</div>
+      <div class="text-xl font-extrabold"><%= counters.presupuestos %></div>
+    </div>
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+      <div class="text-xs uppercase tracking-wider text-slate-400">Min. ahorrados</div>
+      <div class="text-xl font-extrabold"><%= counters.minutos_ahorrados %></div>
+    </div>
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+      <div class="text-xs uppercase tracking-wider text-slate-400">Cotizado</div>
+      <div class="text-xl font-extrabold">$<%= counters.monto_ars.toLocaleString('es-AR') %></div>
+    </div>
+  </div>
+
+  <form id="f" class="mt-6 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <label for="texto" class="text-sm font-semibold text-slate-700">Mensaje del cliente</label>
+    <textarea id="texto" name="texto" rows="5" class="mt-2 w-full rounded-xl border border-slate-300 p-3 text-sm focus:border-slate-900 focus:outline-none" placeholder="hola tenes 200 tornillos del 8x2 y 5 metros de cable 2x1,5? cuanto sale todo"></textarea>
+    <div class="mt-3 flex flex-wrap gap-2">
+      <% ejemplos.forEach((e, i) => { %>
+        <button type="button" class="btn btn-xs btn-ghost border border-slate-300" data-ejemplo="<%= i %>">ejemplo <%= i + 1 %></button>
+      <% }) %>
+    </div>
+    <div class="mt-4 flex items-center gap-3">
+      <button id="go" type="submit" class="btn btn-neutral">Generar presupuesto</button>
+      <span id="status" class="text-sm text-slate-500"></span>
+    </div>
+  </form>
+
+  <section id="resultado" class="mt-6 hidden"></section>
+
+  <p class="mt-8 text-xs text-slate-500">Baseline medido: un presupuesto a mano en mostrador toma ~20 minutos. Con Mostrador: ~2. Los números de arriba salen de <code>impact_events</code> en SQLite, en vivo.</p>
+</main>
+
+<script>
+const EJEMPLOS = <%- JSON.stringify(ejemplos) %>;
+document.querySelectorAll('[data-ejemplo]').forEach(b => b.addEventListener('click', () => {
+  document.getElementById('texto').value = EJEMPLOS[Number(b.dataset.ejemplo)];
+}));
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ars = n => '$' + Number(n).toLocaleString('es-AR');
+
+document.getElementById('f').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const texto = document.getElementById('texto').value.trim();
+  const status = document.getElementById('status');
+  const box = document.getElementById('resultado');
+  const go = document.getElementById('go');
+  if (!texto) { status.textContent = 'Pegá el mensaje del cliente.'; return; }
+  go.disabled = true;
+  box.classList.add('hidden');
+  const pasos = ['Leyendo el mensaje…', 'Extrayendo ítems con IA…', 'Cotizando contra el catálogo…'];
+  let i = 0; status.textContent = pasos[0];
+  const timer = setInterval(() => { i = Math.min(i + 1, pasos.length - 1); status.textContent = pasos[i]; }, 900);
+
+  try {
+    const r = await fetch('/api/quotes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto }) });
+    const data = await r.json();
+    clearInterval(timer);
+    if (!r.ok) { status.textContent = data?.error?.message || 'Error'; go.disabled = false; return; }
+    status.textContent = `Listo en ${data.meta.latency_ms} ms`;
+    box.classList.remove('hidden');
+    box.innerHTML = render(data);
+    wire(data);
+  } catch (err) {
+    clearInterval(timer); status.textContent = 'Error de red: ' + err.message;
+  } finally {
+    go.disabled = false;
+  }
+});
+
+function render(data) {
+  const q = data.quote;
+  const filas = q.items.map(l => `
+    <tr class="${l.requiere_revision ? 'bg-amber-50' : ''}">
+      <td class="px-3 py-2">${esc(l.descripcion)}${l.sku ? ` <span class="text-xs text-slate-400">${esc(l.sku)}</span>` : ' <span class="badge badge-xs badge-warning">revisar</span>'}</td>
+      <td class="px-3 py-2 text-center whitespace-nowrap">${l.cantidad} ${esc(l.unidad)}</td>
+      <td class="px-3 py-2 text-right whitespace-nowrap">${ars(l.precio_unitario_ars)}</td>
+      <td class="px-3 py-2 text-right font-semibold whitespace-nowrap">${ars(l.subtotal_ars)}</td>
+    </tr>`).join('');
+
+  const missing = (data.missing_fields || []).length
+    ? `<div class="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">Faltó: ${data.missing_fields.map(esc).join(', ')}</div>` : '';
+
+  return `
+  <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <div class="text-xs uppercase tracking-widest text-slate-400">Presupuesto</div>
+        <div class="text-lg font-bold">${esc(q.customer_name || 'Cliente mostrador')}</div>
+      </div>
+      <span class="badge ${data.meta.mode === 'live' ? 'badge-success' : 'badge-warning'}">${data.meta.mode === 'live' ? 'IA en vivo' : 'modo degradado'}</span>
+    </div>
+    <table class="mt-4 w-full text-sm">
+      <thead><tr class="border-b border-slate-200 text-slate-500">
+        <th class="px-3 py-2 text-left font-medium">Ítem</th><th class="px-3 py-2 font-medium">Cant.</th>
+        <th class="px-3 py-2 text-right font-medium">Unitario</th><th class="px-3 py-2 text-right font-medium">Subtotal</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div class="mt-4 flex items-center justify-between border-t-2 border-slate-900 pt-3">
+      <span class="text-lg font-bold">Total</span>
+      <span class="text-2xl font-extrabold">${ars(q.total_ars)}</span>
+    </div>
+    ${missing}
+    <details class="mt-4 rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
+      <summary class="cursor-pointer font-semibold">¿Cómo se generó? (auditoría de la IA)</summary>
+      <ul class="mt-2 space-y-1">
+        <li>modelo: <code>${esc(data.meta.model || '—')}</code> · modo: <code>${esc(data.meta.mode)}</code></li>
+        <li>latencia: ${data.meta.latency_ms} ms · tokens: ${data.meta.prompt_tokens} in / ${data.meta.completion_tokens} out</li>
+        <li>reparaciones de schema: ${data.meta.repair_attempts}${data.meta.error ? ` · error: <code>${esc(data.meta.error)}</code>` : ''}</li>
+        <li>ítems con confianza &lt; 0.55: ${q.items.filter(i => i.requiere_revision).length}</li>
+      </ul>
+    </details>
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      <input id="to" type="email" placeholder="email del cliente" value="${esc(q.customer_email || '')}" class="input input-bordered input-sm w-64">
+      <button id="send" class="btn btn-sm btn-neutral">Enviar por email</button>
+      <a href="/q/${q.token}" class="btn btn-sm btn-ghost" target="_blank">Ver artefacto</a>
+      <span id="sendstatus" class="text-sm text-slate-500"></span>
+    </div>
+  </div>`;
+}
+
+function wire(data) {
+  const btn = document.getElementById('send');
+  btn.addEventListener('click', async () => {
+    const email = document.getElementById('to').value.trim();
+    const st = document.getElementById('sendstatus');
+    if (!email) { st.textContent = 'Poné un email.'; return; }
+    btn.disabled = true; st.textContent = 'Enviando…';
+    try {
+      const r = await fetch(`/api/quotes/${data.token}/send`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+      const out = await r.json();
+      if (!r.ok || !out.ok) { st.textContent = 'No se pudo: ' + (out.error || out.mode); return; }
+      st.innerHTML = out.mode === 'live'
+        ? `Enviado a ${esc(out.to)} vía EnvíaloSimple.`
+        : `Modo mock: <a class="link" href="${out.preview}" target="_blank">ver el email</a> (EnvíaloSimple sin credencial)`;
+    } catch (err) { st.textContent = 'Error: ' + err.message; }
+    finally { btn.disabled = false; }
+  });
+}
+</script>
+</body></html>

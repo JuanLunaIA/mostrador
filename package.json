@@ -1,0 +1,23 @@
+{
+  "name": "mostrador",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mostrador — el mostrador de tu ferreteria que nunca duerme. DonWeb Day Rosario 2026.",
+  "main": "app.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "node --test tests/",
+    "evals": "node prompts/evals/run.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "openai": "^7.47.0",
+    "zod": "^4.6.7"
+  }
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head><%- include('partials/head', { title: 'Impacto' }) %></head>
+<body class="bg-slate-50 min-h-screen">
+<main class="mx-auto max-w-3xl px-5 py-10">
+  <a href="/" class="text-sm text-slate-500 hover:text-slate-900">← mostrador</a>
+  <h1 class="mt-3 text-2xl font-extrabold">Impacto acumulado</h1>
+  <p class="text-sm text-slate-500">Leído en vivo de <code>impact_events</code>. Formato alineado a indicadores IRIS+ (SME clients reached).</p>
+  <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <% const tiles = [
+      ['Presupuestos', counters.presupuestos, 'SME clients reached'],
+      ['Minutos ahorrados', counters.minutos_ahorrados, counters.horas_ahorradas + ' h de mostrador'],
+      ['Cotizado', '$' + counters.monto_ars.toLocaleString('es-AR'), 'valor cotizado'],
+      ['Emails', counters.emails, 'presupuestos entregados'],
+    ]; %>
+    <% tiles.forEach(([t, v, sub]) => { %>
+      <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <div class="text-xs uppercase tracking-wider text-slate-400"><%= t %></div>
+        <div class="mt-1 text-2xl font-extrabold"><%= v %></div>
+        <div class="text-xs text-slate-500"><%= sub %></div>
+      </div>
+    <% }) %>
+  </div>
+  <p class="mt-6 text-sm text-slate-600">Baseline: 20 min por presupuesto hecho a mano en mostrador → 2 min con Mostrador. Ahorro registrado por evento: 18 min.</p>
+</main>
+</body></html>
