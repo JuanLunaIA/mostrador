@@ -1,11 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= typeof title !== 'undefined' ? title : 'Mostrador' %> · Ferretería San Luis</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/app.css">
 <style>
-  /* Componentes mínimos inline: daisyUI@5 por CDN no aplica .btn/.input de forma
-     confiable (solo entrega tokens de tema), así que los definimos acá. */
+  /* Componentes que Tailwind no trae: los definimos a mano. El CSS de utilidades
+     se compila a public/app.css y se sirve local — cero dependencia de CDN. */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
     padding: .55rem 1rem; border-radius: .65rem; font-size: .875rem; font-weight: 600;

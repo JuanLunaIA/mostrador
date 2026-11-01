@@ -1,0 +1,4 @@
+/* Entrada de Tailwind. El CSS compilado se versiona en public/app.css para que el
+   sitio no dependa de un CDN: si el wifi del lugar falla, la pagina sigue igual. */
+@import "tailwindcss";
+@source "../src/views";
