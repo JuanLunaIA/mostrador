@@ -2,7 +2,7 @@
 
 **El mostrador de tu ferretería que nunca duerme.** El dueño pega el mensaje de WhatsApp del cliente; Mostrador extrae los ítems, los cotiza contra el catálogo real de la ferretería y devuelve un presupuesto listo para mandar por email. De ~20 minutos a ~2.
 
-- **App:** `http://<IP-DEL-CLOUD-SERVER>/` (DonWeb Cloud Server, Ubuntu 24.04 · nginx → Node `127.0.0.1:3000` → SQLite)
+- **App en vivo:** **https://vps-6576881-x.dattaweb.com/** (DonWeb Cloud Server #6576881, Ubuntu 24.04.5 · nginx → Node `127.0.0.1:3000` → SQLite · TLS Let's Encrypt)
 - **Evento:** DonWeb Day Rosario 2026 — Hackatón "Del problema al servidor" (1/11/2026, 15:15 → 18:30)
 
 ---

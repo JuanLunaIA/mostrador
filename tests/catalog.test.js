@@ -57,3 +57,14 @@ test('no inventa match cuando solo coincide el numero', () => {
   const m = matchItem('amalgama dental 8', PRODUCTS);
   assert.strictEqual(m.sku, null);
 });
+
+test('la cantidad pegada en la descripcion no rompe el match', () => {
+  const m = matchItem('20 bolsas de cemento', PRODUCTS);
+  assert.strictEqual(m.sku, 'CEM-50');
+  assert.ok(m.confianza >= 0.55, `confianza ${m.confianza} deberia superar el umbral`);
+});
+
+test('la medida pegada a la cantidad sigue discriminando', () => {
+  const m = matchItem('12 metros de cable 2x1,5', PRODUCTS);
+  assert.strictEqual(m.sku, 'CAB-2x15');
+});

@@ -46,15 +46,23 @@ function matchItem(descripcion, productos, umbral = 0.55) {
   let best = { sku: null, nombre: null, unidad: null, precio_ars: 0, confianza: 0, matched_on: [] };
   if (!q.length) return { ...best, requiere_revision: true };
 
+  // Si el texto trae un numero suelto que en realidad es la cantidad ("20 bolsas
+  // de cemento"), ese token hunde la cobertura. Probamos tambien sin numeros
+  // sueltos y nos quedamos con la mejor lectura: las medidas ("2x1.5") no se tocan.
+  const sinSueltos = q.filter(t => !SOLO_NUMERO.test(t));
+  const variantes = sinSueltos.length && sinSueltos.length < q.length ? [q, sinSueltos] : [q];
+
   for (const p of productos) {
     const hay = new Set(tokens(`${p.nombre} ${p.aliases || ''}`));
-    const hit = q.filter(t => [...hay].some(h => coincide(t, h)));
-    if (!hit.length) continue;
-    const cobertura = hit.length / q.length;
-    const precision = hit.length / Math.max(hay.size, 1);
-    const confianza = Math.round((cobertura * 0.8 + precision * 0.2) * 100) / 100;
-    if (confianza > best.confianza) {
-      best = { sku: p.sku, nombre: p.nombre, unidad: p.unidad, precio_ars: p.precio_ars, confianza, matched_on: hit };
+    for (const variante of variantes) {
+      const hit = variante.filter(t => [...hay].some(h => coincide(t, h)));
+      if (!hit.length) continue;
+      const cobertura = hit.length / variante.length;
+      const precision = hit.length / Math.max(hay.size, 1);
+      const confianza = Math.round((cobertura * 0.8 + precision * 0.2) * 100) / 100;
+      if (confianza > best.confianza) {
+        best = { sku: p.sku, nombre: p.nombre, unidad: p.unidad, precio_ars: p.precio_ars, confianza, matched_on: hit };
+      }
     }
   }
   if (best.confianza < umbral) {
