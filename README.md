@@ -246,8 +246,24 @@ El proceso escucha en `127.0.0.1:3000` por defecto (regla del deploy oficial de 
 ## 10. Deuda técnica conocida
 
 - El matcher es léxico (tokens + stemming). No resuelve sinónimos ("tirafondo" ≠ "tornillo" si el alias no lo lista) ni unidades implícitas.
-- Sin autenticación: cualquiera con la URL puede generar presupuestos. Aceptable para la demo, **no** para un piloto real.
+- Sin autenticación **activa**: las primitivas están escritas y testeadas (`src/services/auth.js`, ADR-004) pero el ADR explica por qué se dejan apagadas: una auth a medio auditar es peor que no tener auth. Cualquiera con la URL puede generar presupuestos. Aceptable para la demo, **no** para un piloto real.
 - El rate limit es en memoria y por IP: se reinicia con el proceso y no se comparte entre instancias. Sirve para no quemar la clave compartida, no como control de abuso serio.
 - El extractor degradado falla con pedidos sin cantidad explícita en orden invertido complejo.
 - SQLite de un solo archivo: no soporta más de un proceso escribiendo.
 - El baseline de 20 minutos por presupuesto **no está medido**: es el supuesto más riesgoso del caso de negocio.
+
+## 11. Material de entrega
+
+| Qué | Dónde |
+|---|---|
+| Texto para el formulario (corta y larga) | `docs/submission.md` |
+| Guion de 3 minutos + qué no decir | `docs/pitch/guion-3min.md` |
+| Deck (Marp) y versión HTML autocontenida | `docs/pitch/slides.md`, `docs/pitch/slides.html` |
+| **Video de 2:23 con narración en español** | `docs/pitch/video/pitch-mostrador.mp4` + `LEEME.md` |
+| Atestación de verificación (comandos re-ejecutables) | `docs/evidencia/verificacion.md` |
+| Backup y restore de la base en caliente | `deploy/BACKUP.md` |
+| Diccionario de datos y export CSV/JSON | `docs/data/diccionario.md`, `scripts/export.js` |
+| Página de contratación | `/contratar` en producción |
+
+El video se genera, no se filma: slides → PNG con Marp, voz sintética con TTS de OpenAI,
+ensamblado con ffmpeg. Los tres comandos para regenerarlo están en `docs/pitch/video/LEEME.md`.
