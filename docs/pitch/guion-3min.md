@@ -12,6 +12,11 @@
 | Email visible | **Sí**, renderizado en `/outbox/<token>` | Se puede mostrar: es el HTML real que sale |
 | Datos de impacto | En vivo desde `impact_events` | — |
 
+**Si algo falla en vivo:** probado con la clave de OpenAI rota — la app devuelve 201, cae al
+extractor por reglas, cotiza con el catálogo real ($15.450 en la prueba) y muestra el badge
+en **"degradado"**. No hay pantalla de error. Si el wifi del lugar falla, no hay CDN que
+cargar: el CSS se sirve desde el mismo servidor (0 peticiones externas, medido).
+
 **No decir nunca:** "y acá llega el email al cliente". No llega: se genera y se renderiza.
 
 ---

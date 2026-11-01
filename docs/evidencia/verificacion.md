@@ -115,6 +115,25 @@ la autora. Dos proxies de terceros (codetabs, allorigins) devolvieron `522`, que
 fallo **de ellos** (ambos corren sobre Cloudflare Workers con timeouts cortos); el mismo
 contenido servido a Jina demuestra que el origen responde.
 
+## 6b. Resiliencia: qué pasa si la IA falla durante el juicio
+
+Probado con una `OPENAI_API_KEY` inválida (simula cuota agotada o clave revocada), contra el
+catálogo real:
+
+```
+HTTP 201
+ai_mode: degraded | items: 2 | total: $15.450
+email detectado: juan@obrasanluis.com
+  Tornillo autoperforante 8 x 2"   cant 200 unit $45   sub $9.000   conf 0.90
+  Cable taller 2x1.5 mm            cant   5 unit $1.290 sub $6.450  conf 0.88
+error de IA: 401 Incorrect API key provided...
+```
+
+**No hay 500 y el presupuesto sale igual.** El extractor determinístico por reglas toma el
+relevo, el catálogo sigue cotizando y la app lo declara honestamente como `degraded` en el
+badge y en `ai_mode` persistido. Consecuencia práctica: si la clave de OpenAI se cae en el
+medio de la demo, el core flow se sigue mostrando completo.
+
 ## 7. Suite local
 
 ```
