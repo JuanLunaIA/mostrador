@@ -83,7 +83,62 @@
 
   <section id="resultado" class="mt-6 hidden"></section>
 
-  <p class="mt-8 text-xs text-slate-500">Baseline medido: un presupuesto a mano en mostrador toma ~20 minutos. Con Mostrador: ~2. Los números de arriba salen de <code>impact_events</code> en SQLite, en vivo.</p>
+  <p class="mt-8 text-xs text-slate-500"><strong>Baseline supuesto, no medido:</strong> estimamos ~20 minutos hacer un presupuesto a mano en el mostrador; todavía no lo cronometramos. Con Mostrador, ~2 minutos entre pegar el mensaje y mandarlo. Los números de arriba salen de <code>impact_events</code> en SQLite, en vivo.</p>
+
+  <section class="mt-14 border-t border-slate-200 pt-10">
+    <h2 class="text-2xl font-extrabold tracking-tight">Cómo funciona</h2>
+    <p class="mt-2 text-slate-600">Tres pasos, ninguno de los cuales requiere cambiar cómo trabaja el negocio.</p>
+    <ol class="mt-6 grid gap-4 sm:grid-cols-3">
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <div class="text-xs font-bold text-slate-400">PASO 1</div>
+        <div class="mt-1 font-bold">Pegás el mensaje</div>
+        <p class="mt-1 text-sm text-slate-600">Tal como llegó: con errores de tipeo, sin formato, con la medida escrita como sea.</p>
+      </li>
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <div class="text-xs font-bold text-slate-400">PASO 2</div>
+        <div class="mt-1 font-bold">La IA lee, no cotiza</div>
+        <p class="mt-1 text-sm text-slate-600">Extrae qué pide, cuánta cantidad y en qué medida. El modelo nunca ve la lista de precios.</p>
+      </li>
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <div class="text-xs font-bold text-slate-400">PASO 3</div>
+        <div class="mt-1 font-bold">El catálogo pone el precio</div>
+        <p class="mt-1 text-sm text-slate-600">Un matcher determinístico busca cada ítem en el catálogo. Si no está seguro, lo marca para revisar.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="mt-12 rounded-2xl border border-slate-200 bg-white p-6">
+    <h2 class="text-xl font-extrabold tracking-tight">Por qué no puede inventar un precio</h2>
+    <p class="mt-2 text-slate-700">Porque no tiene acceso a los precios. El modelo de lenguaje solo devuelve descripciones, cantidades y medidas; el precio lo asigna el catálogo del comercio. Si el producto no está, el ítem sale marcado <strong>revisar</strong> con total $0 —no con un número inventado—.</p>
+    <p class="mt-3 text-sm text-slate-500">Probalo: escribí «¿cuánto sale un taladro?». El taladro no está entre los 15 productos de ejemplo, así que no vas a ver un precio.</p>
+  </section>
+
+  <section class="mt-12 grid gap-6 sm:grid-cols-2">
+    <div>
+      <h2 class="text-xl font-extrabold tracking-tight">Para quién es</h2>
+      <ul class="mt-3 space-y-2 text-sm text-slate-700">
+        <li>· Ferreterías de barrio que ya venden por WhatsApp y cotizan a mano.</li>
+        <li>· Comercios con un catálogo estable, de decenas o cientos de productos.</li>
+        <li>· Quien quiere que el presupuesto salga en el momento, no a la noche.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="text-xl font-extrabold tracking-tight">Para quién no es (todavía)</h2>
+      <ul class="mt-3 space-y-2 text-sm text-slate-700">
+        <li>· Quien necesita stock en tiempo real: no consulta inventario.</li>
+        <li>· Quien necesita facturación electrónica o cobros: no hace ninguna de las dos.</li>
+        <li>· Quien quiere que el email salga solo: hoy el envío corre en modo de prueba declarado.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="mt-12 flex flex-col items-start gap-3 rounded-2xl bg-slate-900 p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <div class="text-lg font-extrabold">¿Lo querés en tu ferretería?</div>
+      <p class="text-sm text-slate-300">Hay tres planes, con lo que incluye y lo que no, y los precios se definen con vos.</p>
+    </div>
+    <a href="/contratar" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-900 hover:bg-slate-100">Ver los planes</a>
+  </section>
 </main>
 
 <script>
