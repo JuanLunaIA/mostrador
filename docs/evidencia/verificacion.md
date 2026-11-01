@@ -53,6 +53,21 @@ $ curl -sS -X POST https://vps-6576881-x.dattaweb.com/api/quotes \
 
 Aritmética verificada a mano: `300×45 + 25×1290 + 10×9800 = 13.500 + 32.250 + 98.000 = 143.750`.
 
+### Latencias medidas (10 corridas secuenciales contra la URL pública)
+
+| Métrica | Valor |
+|---|---|
+| mínimo | 914 ms |
+| **p50** | **1.135 ms** |
+| **p95** | **1.185 ms** |
+| máximo | 1.414 ms |
+
+Las 10 entradas incluyeron frases invertidas, coma decimal, y una consulta de precio
+("me pasas precio de un taladro?"). **9 devolvieron total > 0 y la décima fue el
+comportamiento correcto**: `taladro` no está en el catálogo de 15 productos, así que salió
+con `sku=null`, `confianza=0` y `requiere_revision=true` en vez de inventar un importe.
+Sobre el criterio que importa —no inventar precios— son **10/10**.
+
 ## 4. Casos dorados contra producción
 
 ```

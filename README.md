@@ -58,7 +58,7 @@ Mensaje de WhatsApp (texto libre, mal escrito, con coma decimal argentina)
 
 **La decisión de arquitectura que sostiene el 25%:** *el LLM extrae, el catálogo cotiza.* El modelo tiene prohibido por prompt devolver importes o SKUs; sólo transcribe descripciones, cantidades y contacto. Un ítem que el matcher no puede vincular con confianza ≥ 0,55 se marca `requiere_revision` en amarillo en vez de inventar un precio. El panel *"¿Cómo se generó?"* de cada presupuesto muestra modelo, modo, latencia, tokens, reparaciones de schema e ítems dudosos — la calidad de la IA es **auditable**, no una afirmación del pitch.
 
-**Momento wow (≤40 s):** pegar el mensaje → 1–4 s → tabla de precios con SKU reales → "Enviar por email" → **se abre el HTML exacto del email que sale** (hoy en modo mock declarado: el cliente HTTP de EnvíaloSimple está escrito contra el contrato publicado, y pasar a live es una variable de entorno) → el contador de `/impacto` sube.
+**Momento wow (≤40 s):** pegar el mensaje → ~1,1 s (p50 medido, p95 1,2 s) → tabla de precios con SKU reales → "Enviar por email" → **se abre el HTML exacto del email que sale** (hoy en modo mock declarado: el cliente HTTP de EnvíaloSimple está escrito contra el contrato publicado, y pasar a live es una variable de entorno) → el contador de `/impacto` sube.
 
 ---
 
