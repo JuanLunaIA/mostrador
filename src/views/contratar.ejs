@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head><%- include('partials/head', {
+  title: 'Contratar Mostrador',
+  desc: 'Tres planes para llevar Mostrador a tu ferretería, con lo que incluye y lo que no. Precios a definir y estado real del producto, sin promesas que no podamos sostener.',
+  canonical: '/contratar'
+}) %></head>
+<body class="bg-slate-50 min-h-screen text-slate-900">
+
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto max-w-5xl px-5 py-4 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2 min-w-0">
+      <span class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-900 text-white font-black">M</span>
+      <div class="min-w-0">
+        <div class="font-bold leading-tight">Mostrador</div>
+        <div class="text-xs text-slate-500 leading-tight truncate">Ferretería San Luis · Rosario</div>
+      </div>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="#planes" class="hidden sm:inline text-slate-600 hover:text-slate-900">Planes</a>
+      <a href="#alcance" class="hidden sm:inline text-slate-600 hover:text-slate-900">Alcance real</a>
+      <a href="#preguntas" class="hidden md:inline text-slate-600 hover:text-slate-900">Preguntas</a>
+      <a href="/" class="btn btn-sm btn-ghost border border-slate-300">Probar la app</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-5xl px-5 py-10 sm:py-14">
+
+  <!-- Hero: la promesa y el estado real, en la misma pantalla. -->
+  <section class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+    <div>
+      <div class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Contratación · versión piloto</div>
+      <h1 class="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight leading-[1.1]">Contratar Mostrador en tu ferretería.</h1>
+      <p class="mt-4 text-lg leading-relaxed text-slate-600">
+        Tres formas de empezar. Cada una dice qué incluye, qué no incluye y qué parte todavía hay que construir.
+        Sin métricas inventadas, sin clientes de mentira y sin precios que no podamos explicar.
+      </p>
+      <p class="mt-4 text-sm leading-relaxed text-slate-600">
+        Mostrador está en versión piloto: el flujo principal funciona de punta a punta, el envío de email corre en
+        <strong class="font-semibold text-slate-900">modo mock declarado</strong> y todavía no hay ferreterías usándolo en producción.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a href="#planes" class="btn btn-neutral">Ver los tres planes</a>
+        <a href="#contacto" class="btn btn-ghost border border-slate-300">Hablar con quien lo hizo</a>
+      </div>
+      <p class="mt-3 text-xs text-slate-500">Los precios de los tres planes están a definir. Abajo explicamos por qué.</p>
+    </div>
+
+    <aside class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="text-sm font-bold">Estado real del producto</h2>
+        <span class="badge badge-warning">piloto</span>
+      </div>
+      <p class="mt-1 text-xs text-slate-500">Al 1 de noviembre de 2026. Si algo cambia, esta página se actualiza antes que el pitch.</p>
+      <dl class="mt-4 divide-y divide-slate-100 text-sm">
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Mensaje → presupuesto cotizado</dt>
+          <dd class="font-semibold text-emerald-700">Funciona</dd>
+        </div>
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Precio desde el catálogo</dt>
+          <dd class="font-semibold text-emerald-700">Funciona</dd>
+        </div>
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Envío de email al cliente</dt>
+          <dd class="font-semibold text-amber-700">Mock declarado</dd>
+        </div>
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Login / multiusuario</dt>
+          <dd class="font-semibold text-rose-700">No existe</dd>
+        </div>
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Integración con WhatsApp</dt>
+          <dd class="font-semibold text-rose-700">No existe</dd>
+        </div>
+        <div class="flex items-center justify-between gap-3 py-2">
+          <dt class="text-slate-600">Clientes en producción</dt>
+          <dd class="font-semibold text-slate-900 tabular-nums">0</dd>
+        </div>
+      </dl>
+      <p class="mt-4 rounded-lg bg-slate-50 p-3 text-xs leading-relaxed text-slate-600">
+        La app que se prueba en <a class="link" href="/">la portada</a> es la misma que se instala en un piloto.
+        No hay una “versión demo” distinta de la que se vende.
+      </p>
+    </aside>
+  </section>
+
+  <!-- Qué hace hoy, sin adjetivos. -->
+  <section class="mt-14">
+    <h2 class="text-xl font-bold tracking-tight">Qué hace Mostrador hoy</h2>
+    <div class="mt-4 grid gap-3 sm:grid-cols-3">
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-sm font-semibold">Ordena el mensaje</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Toma el WhatsApp tal como llegó y devuelve ítems, cantidades y unidad. No hace falta que el cliente escriba prolijo.</p>
+      </div>
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-sm font-semibold">Cotiza con tu catálogo</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">El modelo nunca fija precios: sólo transcribe. El importe sale de la tabla de productos de la ferretería.</p>
+      </div>
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-sm font-semibold">Marca lo dudoso</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Si un ítem no se vincula con confianza suficiente, queda en amarillo como “revisar” en vez de inventar un precio.</p>
+      </div>
+    </div>
+    <p class="mt-4 text-sm leading-relaxed text-slate-600">
+      Lo que <strong class="font-semibold text-slate-900">no</strong> sabemos todavía es cuánto tiempo ahorra en tu mostrador.
+      El proyecto partió de una estimación de ~20 minutos por presupuesto armado a mano, pero no está medida en ninguna ferretería.
+      Por eso el primer paso de cualquier plan es cronometrar tus presupuestos reales, no mostrarte un número de folleto.
+    </p>
+  </section>
+
+  <!-- Planes -->
+  <section id="planes" class="mt-14 scroll-mt-6">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h2 class="text-2xl font-bold tracking-tight">Tres planes</h2>
+        <p class="mt-1 text-sm text-slate-600">Mismo producto. Cambia el acompañamiento, cuántos mostradores cubre y cuánto hay que desarrollar.</p>
+      </div>
+      <span class="badge badge-warning">precios a definir</span>
+    </div>
+
+    <div class="mt-5 grid gap-4 lg:grid-cols-3">
+
+      <!-- Plan 1 -->
+      <article class="flex flex-col rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold">Piloto</h3>
+            <p class="mt-0.5 text-sm text-slate-500">Para probar con tu catálogo real antes de decidir.</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl bg-slate-50 p-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Precio</div>
+          <div class="text-xl font-extrabold">A definir</div>
+          <div class="text-xs text-slate-500">Puesta en marcha + período de prueba acordado por escrito.</div>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Incluye</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Carga inicial del catálogo junto al dueño, desde la planilla o lista de precios que ya uses.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Una instancia aislada para tu ferretería y un solo mostrador.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Flujo completo: pegar el mensaje, cotizar y abrir el presupuesto público.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Medición de tiempos: cronometramos 5 presupuestos reales antes y después, con vos.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Ajuste de alias y descripciones con los nombres que usa tu mostrador.</span></li>
+          </ul>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">No incluye</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Envío real de emails (modo mock).</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Integración automática con WhatsApp.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Login, permisos, facturación o garantía de disponibilidad.</span></li>
+          </ul>
+        </div>
+        <div class="mt-auto pt-5">
+          <div class="flex items-center gap-2 text-xs font-semibold text-emerald-700"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Disponible para agendar</div>
+          <a href="#contacto" class="btn btn-sm btn-neutral mt-3 w-full">Pedir un piloto</a>
+        </div>
+      </article>
+
+      <!-- Plan 2 -->
+      <article class="relative flex flex-col rounded-2xl bg-white p-5 shadow-md ring-2 ring-slate-900">
+        <span class="absolute -top-3 left-5 badge badge-xs bg-slate-900 text-white">plan base</span>
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold">Mostrador</h3>
+            <p class="mt-0.5 text-sm text-slate-500">Para la operación diaria del local.</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl bg-slate-50 p-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Precio</div>
+          <div class="text-xl font-extrabold">A definir</div>
+          <div class="text-xs text-slate-500">Abono mensual por ferretería + puesta en marcha.</div>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Incluye</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Todo lo del plan Piloto, con acompañamiento durante la operación.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Mantenimiento del catálogo: carga y actualización mensual acordada, hoy con nosotros (no hay panel de autoservicio).</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Revisión mensual de los ítems que el matcher no reconoce, para mejorar alias y descripciones.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Soporte por email o WhatsApp en días hábiles, horario comercial argentino.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Informe mensual armado a mano con los datos que ya registra la base: presupuestos, ítems dudosos y tiempos.</span></li>
+          </ul>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">No incluye</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Envío real de email hasta resolver EnvíaloSimple (add-on pago + dominio verificado).</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Multiusuario con permisos: requiere login, que todavía no está implementado.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Integración con tu sistema de stock, facturación o ERP.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>App móvil, SLA o backup automático.</span></li>
+          </ul>
+        </div>
+        <div class="mt-auto pt-5">
+          <div class="flex items-center gap-2 text-xs font-semibold text-amber-700"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Requiere puesta en producción</div>
+          <p class="mt-1 text-xs leading-relaxed text-slate-500">Se firma cuando estén resueltos el login y el respaldo. Hoy no lo podemos operar como abono mensual.</p>
+          <a href="#contacto" class="btn btn-sm btn-neutral mt-3 w-full">Anotarme para cuando esté</a>
+        </div>
+      </article>
+
+      <!-- Plan 3 -->
+      <article class="flex flex-col rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold">Varias sucursales</h3>
+            <p class="mt-0.5 text-sm text-slate-500">Para una cadena o un grupo de ferreterías.</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl bg-slate-50 p-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Precio</div>
+          <div class="text-xl font-extrabold">A definir</div>
+          <div class="text-xs text-slate-500">Desarrollo a medida + abono por sucursal.</div>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Propuesta</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Catálogos separados por sucursal, con precios por zona si hacen falta.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Usuarios y permisos por mostrador.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Reportes consolidados entre sucursales.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-100 text-[10px] font-black text-emerald-700">✓</span><span>Despliegue en tu infraestructura o en la nube, a acordar.</span></li>
+          </ul>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">No incluye</div>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Nada de esto está construido hoy. Es una propuesta de desarrollo, no un plan disponible.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Integración con ERP o stock central.</span></li>
+            <li class="flex gap-2"><span aria-hidden="true" class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-rose-100 text-[10px] font-black text-rose-700">×</span><span>Fecha y precio antes de un relevamiento de alcance.</span></li>
+          </ul>
+        </div>
+        <div class="mt-auto pt-5">
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-600"><span class="h-2 w-2 rounded-full bg-slate-400"></span>A desarrollar</div>
+          <p class="mt-1 text-xs leading-relaxed text-slate-500">Si te interesa, lo diseñamos. No lo vendemos como si ya existiera.</p>
+          <a href="#contacto" class="btn btn-sm btn-ghost mt-3 w-full border border-slate-300">Conversar el alcance</a>
+        </div>
+      </article>
+    </div>
+
+    <p class="mt-4 text-sm leading-relaxed text-slate-600">
+      <strong class="font-semibold text-slate-900">Por qué no publicamos un precio:</strong> el costo real depende de cuántos ítems
+      hay que cargar, cuántos mostradores lo usan, quién hace la puesta en marcha y si hace falta el envío real de email.
+      Tampoco tenemos clientes todavía: cualquier número que pusiéramos acá sería inventado. La hipótesis de trabajo del proyecto
+      es un abono mensual por ferretería, pero no es una oferta. Después del relevamiento te pasamos un número por escrito.
+    </p>
+  </section>
+
+  <!-- Alcance real: lo que no está -->
+  <section id="alcance" class="mt-14 scroll-mt-6">
+    <h2 class="text-2xl font-bold tracking-tight">Lo que no incluye ningún plan (hoy)</h2>
+    <p class="mt-1 max-w-3xl text-sm leading-relaxed text-slate-600">
+      Esto no es la letra chica: es la lista de cosas que alguien podría suponer que están y no están.
+      Si necesitás alguna para operar, decilo en la primera conversación y vemos si se puede resolver.
+    </p>
+
+    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">mock</span>
+          <h3 class="text-sm font-bold">Envío real de emails</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          La cuenta de EnvíaloSimple de este proyecto no tiene contratado el add-on transaccional pago y el dominio remitente
+          no está verificado. Por eso <code class="rounded bg-slate-100 px-1 py-0.5 text-xs">EMAIL_MODE=mock</code>: Mostrador genera
+          el HTML exacto del correo y lo deja en <code class="rounded bg-slate-100 px-1 py-0.5 text-xs">/outbox/&lt;token&gt;</code>,
+          pero no lo entrega. Pasar a live es una variable de entorno más la contratación del add-on. Si lo necesitás, se cotiza aparte
+          y el costo del proveedor lo pagás vos.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">manual</span>
+          <h3 class="text-sm font-bold">Integración con WhatsApp</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No hay conexión con la API de WhatsApp Business. El flujo es copiar el mensaje y pegarlo en Mostrador.
+          Leer y responder solo requiere la API oficial, verificación del negocio y costos por conversación: es otro proyecto,
+          no una casilla que se activa.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">a mano</span>
+          <h3 class="text-sm font-bold">Precios y stock sincronizados</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Mostrador cotiza contra la tabla de productos que cargamos. No se sincroniza con tu sistema de gestión ni con un Excel abierto.
+          Si el precio cambia en tu sistema y no en el catálogo, el presupuesto sale con el precio viejo. La actualización es un paso acordado,
+          no automático.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">sin auth</span>
+          <h3 class="text-sm font-bold">Login y permisos</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No hay autenticación. Cualquiera con la URL de la instancia puede generar presupuestos. En un piloto se resuelve con una instancia
+          aislada; para operación real es un requisito que hay que desarrollar antes de firmar el plan Mostrador.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">un servidor</span>
+          <h3 class="text-sm font-bold">Disponibilidad garantizada</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Corre en un solo servidor con SQLite. No hay redundancia, backups automáticos ni SLA. Si el servidor se cae, el mostrador
+          vuelve al método de siempre. Para un piloto es aceptable; para depender del sistema todos los días, no.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">manual</span>
+          <h3 class="text-sm font-bold">Facturación y cobro</h3>
+        </div>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No hay integración con Mercado Pago ni facturación automática. La contratación se acuerda por email y se factura como corresponda
+          según el tipo de cliente. Nada se cobra desde esta página.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Puesta en marcha -->
+  <section class="mt-14">
+    <h2 class="text-2xl font-bold tracking-tight">Cómo es la puesta en marcha</h2>
+    <ol class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <li class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-xs font-bold text-slate-400">01</div>
+        <div class="mt-1 text-sm font-semibold">Relevamiento</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Media hora para ver tu catálogo, cómo armás presupuestos y quién los usa.</p>
+      </li>
+      <li class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-xs font-bold text-slate-400">02</div>
+        <div class="mt-1 text-sm font-semibold">Prueba con tus datos</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Cargamos una copia del catálogo y hacés presupuestos reales, no de ejemplo.</p>
+      </li>
+      <li class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-xs font-bold text-slate-400">03</div>
+        <div class="mt-1 text-sm font-semibold">Medición</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Comparamos tiempos y errores contra tu método actual, con los números a la vista.</p>
+      </li>
+      <li class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <div class="text-xs font-bold text-slate-400">04</div>
+        <div class="mt-1 text-sm font-semibold">Decisión</div>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Si no mejora, no seguimos. No hay penalidad por no contratar después del piloto.</p>
+      </li>
+    </ol>
+    <p class="mt-4 text-sm leading-relaxed text-slate-600">
+      No prometemos un plazo estándar: depende de cuántos ítems tenga el catálogo y de la calidad de la planilla.
+      Después de verla te damos una fecha por escrito.
+    </p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="preguntas" class="mt-14 scroll-mt-6">
+    <h2 class="text-2xl font-bold tracking-tight">Preguntas frecuentes</h2>
+    <p class="mt-1 text-sm text-slate-600">Las que nos harían en una reunión, contestadas igual de directo.</p>
+
+    <div class="mt-4 space-y-3">
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Ya hay ferreterías usando Mostrador?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          No. Mostrador se construyó para el DonWeb Day Rosario 2026 y todavía no tiene clientes. Esta página no tiene logos,
+          casos de éxito ni testimonios porque no existen. Lo que sí hay es una app funcionando que podés probar ahora mismo
+          desde <a class="link" href="/">la portada</a>, con un catálogo de ejemplo de 15 productos.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿El presupuesto le llega al cliente por email?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          Hoy no. El envío está en modo mock declarado. Mostrador arma el email con el mismo HTML que usaría en producción y lo deja
+          visible en <code class="rounded bg-slate-100 px-1 py-0.5 text-xs">/outbox/&lt;token&gt;</code>, pero no lo entrega a ningún
+          destinatario. Para enviarlo de verdad hace falta contratar el add-on transaccional de EnvíaloSimple y verificar el dominio
+          remitente. Mientras tanto, el circuito real es: generás el presupuesto, abrís el HTML y lo mandás desde tu correo o lo imprimís.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Se conecta solo al WhatsApp de la ferretería?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          No. El mensaje se copia y se pega. La integración con la API de WhatsApp Business requiere una cuenta oficial, verificación
+          del negocio, una URL pública y un costo por conversación. Es un desarrollo aparte y no está en ninguno de los tres planes.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿De dónde salen los precios del presupuesto?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          De tu catálogo. El modelo de IA sólo extrae descripciones, cantidades y datos de contacto: tiene prohibido devolver importes
+          o códigos. El precio unitario y el total se calculan contra la tabla de productos de la ferretería. Si un ítem no se vincula
+          con confianza suficiente, se marca “revisar” y no se le inventa un precio. El panel “¿Cómo se generó?” de cada presupuesto
+          muestra modelo, latencia, tokens y reparaciones, para que la calidad de la extracción sea auditable.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Cuánto tiempo ahorra?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          No lo sabemos con datos propios. La estimación de ~20 minutos por presupuesto armado a mano es el supuesto más riesgoso
+          del proyecto y no está medida en ninguna ferretería. Por eso el piloto incluye cronometrar 5 presupuestos reales antes y
+          después. Hasta tener ese número, no vas a ver un porcentaje de ahorro en esta página.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Por qué los precios dicen “a definir”?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          Porque el costo depende de cosas que todavía no sabemos de tu ferretería: cuántos ítems hay que cargar, cuántos mostradores
+          lo van a usar y si hace falta resolver el envío real de email. Además, sin clientes, cualquier precio publicado sería una
+          invención. Preferimos relevar primero y pasar un número por escrito. La hipótesis interna es un abono mensual por ferretería,
+          pero no es una oferta vigente.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Qué pasa con el catálogo y con los datos de mis clientes?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          El catálogo y los presupuestos viven en una base SQLite dentro del servidor donde corre la instancia. En un piloto usás una
+          instancia aislada y no hace falta cargar datos sensibles de clientes: alcanza con el nombre y un contacto si lo querés en el
+          presupuesto. No hay backups automáticos; el respaldo se acuerda. Si decidís no seguir, te entregamos el archivo de la base
+          y el catálogo cargado. No hay exportador armado: se entrega el archivo tal cual.
+        </p>
+      </details>
+
+      <details class="group rounded-xl bg-white p-4 ring-1 ring-slate-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+          ¿Puedo contratar una sola parte, por ejemplo el email?
+          <span aria-hidden="true" class="text-slate-400 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          No vendemos piezas sueltas. El valor está en el flujo completo: mensaje desordenado → ítems → precio del catálogo →
+          presupuesto. El envío real es una dependencia externa (EnvíaloSimple), no un módulo que activamos sin cuenta ni dominio
+          verificado.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contacto" class="mt-14 scroll-mt-6">
+    <div class="rounded-2xl bg-slate-900 p-6 sm:p-8 text-white">
+      <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight">Contame tu caso y te digo si Mostrador sirve.</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-300">
+            Escribime con tres datos: cuántos mostradores tenés, cuántos ítems maneja el catálogo y cómo armás los presupuestos hoy.
+            Si Mostrador no te sirve, te lo digo en la misma respuesta.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <a class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+               href="mailto:juan.c.luna04@gmail.com?subject=Piloto%20Mostrador%20-%20consulta&amp;body=Hola%2C%20quiero%20ver%20si%20Mostrador%20sirve%20para%20mi%20ferreteria.%0D%0A%0D%0ANombre%3A%0D%0AFerreteria%3A%0D%0AZona%3A%0D%0ACantidad%20de%20mostradores%3A%0D%0AItems%20en%20el%20catalogo%20(aprox.)%3A%0D%0AComo%20armamos%20los%20presupuestos%20hoy%3A">
+              Escribir por email
+            </a>
+            <a href="/" class="btn bg-slate-800 text-white ring-1 ring-slate-700 hover:bg-slate-700">Probar la app ahora</a>
+            <a href="https://github.com/JuanLunaIA/mostrador" target="_blank" rel="noopener" class="btn bg-slate-800 text-white ring-1 ring-slate-700 hover:bg-slate-700">Ver el código</a>
+          </div>
+          <p class="mt-3 text-xs leading-relaxed text-slate-400">
+            El botón abre tu cliente de correo con el mensaje ya armado. Esta página no tiene formulario ni envía emails por su cuenta:
+            no hay backend de contacto. Si el mailto no te funciona, escribí a
+            <span class="font-mono text-slate-200">juan.c.luna04@gmail.com</span>.
+          </p>
+        </div>
+        <div class="rounded-xl bg-slate-800/60 p-4 ring-1 ring-slate-700">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Qué vas a recibir</div>
+          <ul class="mt-3 space-y-2 text-sm text-slate-300">
+            <li>Una respuesta con lo que se puede hacer y lo que no.</li>
+            <li>Un rango de precio por escrito, después del relevamiento.</li>
+            <li>Ningún seguimiento automático ni lista de correo.</li>
+          </ul>
+          <p class="mt-4 border-t border-slate-700 pt-3 text-xs leading-relaxed text-slate-400">
+            No prometemos una demo agendada en 24 horas ni un ejecutivo asignado. Contesta la persona que construyó el producto.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="mt-8 text-xs leading-relaxed text-slate-500">
+    Mostrador es un proyecto para el DonWeb Day Rosario 2026. Esta página describe una versión piloto al 1 de noviembre de 2026.
+    No hay clientes en producción, no hay métricas de ahorro medidas y el envío de email corre en modo mock declarado.
+    Los precios son propuestas a definir, no una oferta vigente.
+  </p>
+</main>
+
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-5xl px-5 py-6 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
+    <div class="flex items-center gap-2">
+      <span class="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white text-xs font-black">M</span>
+      <span>Mostrador · Ferretería San Luis · Rosario</span>
+    </div>
+    <nav class="flex items-center gap-4">
+      <a href="/" class="hover:text-slate-900">App</a>
+      <a href="/impacto" class="hover:text-slate-900">Impacto</a>
+      <a href="/contratar" class="font-semibold text-slate-900">Contratar</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="es" data-theme="light">
-<head><%- include('partials/head', { title: 'Mostrador IA' }) %></head>
+<head><%- include('partials/head', {
+  title: 'Mostrador: del WhatsApp al presupuesto',
+  desc: 'Pegá el mensaje de WhatsApp del cliente tal como llegó: Mostrador extrae los ítems, los cotiza con precios reales del catálogo y te deja el presupuesto listo para mandar.',
+  canonical: '/'
+}) %></head>
 <body class="bg-slate-50 min-h-screen">
 <header class="border-b border-slate-200 bg-white">
   <div class="mx-auto max-w-3xl px-5 py-4 flex items-center justify-between">
@@ -51,6 +55,19 @@
     </div>
   </form>
 
+  <!-- Estado vacío: la home no muestra nada hasta que hay un pedido. Una línea que dice qué hacer. -->
+  <section id="vacio" class="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-5">
+    <p class="text-sm text-slate-600"><span class="font-semibold text-slate-900">Todavía no hay presupuesto.</span> Pegá el mensaje del cliente (o tocá un ejemplo) y dale a «Generar presupuesto».</p>
+  </section>
+
+  <!-- Estado de error: qué pasó y qué hacer, en una línea. -->
+  <section id="error" role="alert" aria-live="assertive" class="mt-6 hidden rounded-2xl border border-rose-300 bg-rose-50 p-4">
+    <div class="flex items-start gap-3">
+      <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-rose-600 text-[11px] font-black text-white">!</span>
+      <p id="error-texto" class="text-sm font-semibold text-rose-900"></p>
+    </div>
+  </section>
+
   <section id="resultado" class="mt-6 hidden"></section>
 
   <p class="mt-8 text-xs text-slate-500">Baseline medido: un presupuesto a mano en mostrador toma ~20 minutos. Con Mostrador: ~2. Los números de arriba salen de <code>impact_events</code> en SQLite, en vivo.</p>
@@ -60,10 +77,31 @@
 const EJEMPLOS = <%- JSON.stringify(ejemplos) %>;
 document.querySelectorAll('[data-ejemplo]').forEach(b => b.addEventListener('click', () => {
   document.getElementById('texto').value = EJEMPLOS[Number(b.dataset.ejemplo)];
+  limpiarError();
+  mostrarVacio();
 }));
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ars = n => '$' + Number(n).toLocaleString('es-AR');
+
+// Estado vacío y estado de error de la home. El error siempre dice qué hacer,
+// en una línea; no dejamos al usuario con un "Error" pelado.
+const vacio = document.getElementById('vacio');
+const cajaError = document.getElementById('error');
+const textoError = document.getElementById('error-texto');
+
+function mostrarError(msg) {
+  textoError.textContent = msg;
+  cajaError.classList.remove('hidden');
+  vacio.classList.add('hidden'); // el error ya dice qué hacer: no duplicamos el cartel
+}
+function limpiarError() {
+  cajaError.classList.add('hidden');
+  textoError.textContent = '';
+}
+function mostrarVacio() {
+  if (document.getElementById('resultado').classList.contains('hidden')) vacio.classList.remove('hidden');
+}
 
 document.getElementById('f').addEventListener('submit', async (ev) => {
   ev.preventDefault();
@@ -71,9 +109,16 @@ document.getElementById('f').addEventListener('submit', async (ev) => {
   const status = document.getElementById('status');
   const box = document.getElementById('resultado');
   const go = document.getElementById('go');
-  if (!texto) { status.textContent = 'Pegá el mensaje del cliente.'; return; }
+  limpiarError();
+  if (!texto) {
+    status.textContent = '';
+    mostrarError('Pegá el mensaje del cliente en el cuadro de arriba para poder cotizarlo.');
+    document.getElementById('texto').focus();
+    return;
+  }
   go.disabled = true;
   box.classList.add('hidden');
+  vacio.classList.add('hidden');
   const pasos = ['Leyendo el mensaje…', 'Extrayendo ítems con IA…', 'Cotizando contra el catálogo…'];
   let i = 0; status.textContent = pasos[0];
   const timer = setInterval(() => { i = Math.min(i + 1, pasos.length - 1); status.textContent = pasos[i]; }, 900);
@@ -82,13 +127,27 @@ document.getElementById('f').addEventListener('submit', async (ev) => {
     const r = await fetch('/api/quotes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto }) });
     const data = await r.json();
     clearInterval(timer);
-    if (!r.ok) { status.textContent = data?.error?.message || 'Error'; go.disabled = false; return; }
+    if (!r.ok) {
+      // Traducimos el código de la API a una instrucción concreta para el mostrador.
+      const porCodigo = {
+        rate_limited: 'Demasiados pedidos seguidos: esperá unos segundos y volvé a intentar.',
+        texto_requerido: 'Pegá el mensaje del cliente en el cuadro de arriba y probá de nuevo.',
+        internal_error: 'Se nos rompió algo del lado del servidor: probá de nuevo en unos segundos.',
+      };
+      status.textContent = '';
+      mostrarError(porCodigo[data?.error?.code] || data?.error?.message || 'No pudimos generar el presupuesto. Probá de nuevo en unos segundos.');
+      go.disabled = false;
+      return;
+    }
     status.textContent = `Listo en ${data.meta.latency_ms} ms`;
+    limpiarError();
     box.classList.remove('hidden');
     box.innerHTML = render(data);
     wire(data);
   } catch (err) {
-    clearInterval(timer); status.textContent = 'Error de red: ' + err.message;
+    clearInterval(timer);
+    status.textContent = '';
+    mostrarError('No llegamos al servidor: revisá la conexión y volvé a intentar.');
   } finally {
     go.disabled = false;
   }

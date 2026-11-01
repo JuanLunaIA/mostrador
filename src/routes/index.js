@@ -29,6 +29,8 @@ router.get('/impacto', (req, res) => {
   res.render('impacto', { counters: impact.counters() });
 });
 
+router.get('/contratar', (req, res) => res.render('contratar', { title: 'Contratar Mostrador', desc: 'Tres planes para llevar Mostrador a tu ferretería, con lo que incluye y lo que no. Precios a definir y estado real del producto.', canonical: '/contratar' }));
+
 router.get('/outbox/:token', (req, res) => {
   const f = rutaOutbox(OUTBOX, req.params.token);
   if (!f || !fs.existsSync(f)) return res.status(404).send('sin email en modo mock para ese token');

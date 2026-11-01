@@ -1,9 +1,14 @@
 <!doctype html>
 <html lang="es" data-theme="light">
-<head><%- include('partials/head', { title: 'Presupuesto ' + quote.token }) %></head>
+<head><%- include('partials/head', {
+  title: 'Presupuesto ' + quote.token,
+  desc: 'Presupuesto de Ferretería San Luis generado con Mostrador: ítems, cantidades y total con precios del catálogo. Válido 7 días.',
+  canonical: '/q/' + quote.token,
+  noindex: true
+}) %></head>
 <body class="bg-slate-100 min-h-screen py-10">
-<main class="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
-  <div class="flex items-start justify-between border-b border-slate-200 pb-4">
+<main class="hoja mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
+  <div class="flex items-start justify-between gap-6 border-b border-slate-200 pb-4">
     <div>
       <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Mostrador</div>
       <h1 class="text-2xl font-extrabold">Ferretería San Luis</h1>
@@ -31,11 +36,17 @@
       <% }) %>
     </tbody>
   </table>
-  <div class="mt-4 flex justify-between border-t-2 border-slate-900 pt-3 text-xl font-extrabold">
+  <div class="total mt-4 flex justify-between border-t-2 border-slate-900 pt-3 text-xl font-extrabold">
     <span>Total</span><span>$<%= quote.total_ars.toLocaleString('es-AR') %></span>
   </div>
   <p class="mt-6 text-xs text-slate-500">Generado con IA (<%= quote.ai_mode %>) en <%= quote.ai_latency_ms %> ms · válido 7 días · Mostrador sobre DonWeb Cloud.</p>
-  <div class="mt-6 flex gap-2 print:hidden">
+
+  <!-- Solo en papel/PDF: deja el comprobante identificable sin imprimir la botonera. -->
+  <p class="print-only mt-4 border-t border-slate-200 pt-3 text-xs text-slate-500">
+    Mostrador · Ferretería San Luis · Rosario — presupuesto <%= quote.token %> · válido 7 días.
+  </p>
+
+  <div class="no-print mt-6 flex gap-2">
     <button onclick="window.print()" class="btn btn-sm btn-neutral">Imprimir / PDF</button>
     <a href="/" class="btn btn-sm btn-ghost">Volver al mostrador</a>
   </div>

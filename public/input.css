@@ -2,3 +2,51 @@
    sitio no dependa de un CDN: si el wifi del lugar falla, la pagina sigue igual. */
 @import "tailwindcss";
 @source "../src/views";
+
+/* ---------------------------------------------------------------------------
+   Impresion / Guardar como PDF de /q/<token>.
+   Sin botones, sin navegacion y todo en negro: en papel (o en PDF en blanco y
+   negro) los grises claros de Tailwind no se leen y las sombras se ven sucias.
+   --------------------------------------------------------------------------- */
+.print-only { display: none; }
+
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+
+  html, body { background: #fff !important; }
+  body { color: #000; font-size: 11pt; }
+
+  .no-print, .print\:hidden { display: none !important; }
+  .print-only { display: block !important; }
+
+  /* La hoja ocupa el ancho util: sin tarjeta, sombra ni esquinas redondeadas. */
+  main.hoja {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* Todo el texto en negro; sin fondos ni bordes grises. */
+  main.hoja, main.hoja * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  main.hoja h1 { font-size: 18pt; }
+  /* Un email o una descripcion larga no puede empujar la hoja fuera del papel. */
+  main.hoja { overflow-wrap: anywhere; }
+  main.hoja table { width: 100%; max-width: 100%; table-layout: auto; border-collapse: collapse; font-size: 10.5pt; }
+  /* Si la tabla corta de pagina, el encabezado se repite arriba. */
+  main.hoja thead { display: table-header-group; }
+  main.hoja tr { break-inside: avoid; page-break-inside: avoid; }
+  main.hoja th, main.hoja td { padding: 4pt 3pt !important; }
+  main.hoja tbody tr { border-bottom: 0.5pt solid #666 !important; }
+  main.hoja thead tr { border-bottom: 1pt solid #000 !important; }
+  main.hoja .total { border-top: 1.5pt solid #000 !important; }
+  main.hoja .total span:last-child { font-size: 15pt; }
+}

@@ -89,6 +89,12 @@ test('misma contrasena, dos usuarios: hashes distintos por salt y ambos verifica
     assert.ok(auth.verifyPassword(PASSWORD, h1));
     assert.ok(auth.verifyPassword(PASSWORD, h2));
 
+    const encontrado = auth.findUserByEmail(db, ' UNO@Example.com ');
+    assert.strictEqual(encontrado.id, uno.id);
+    assert.strictEqual(encontrado.passwordHash, undefined, 'findUserByEmail no debe exponer el hash');
+    assert.strictEqual(encontrado.password_hash, undefined, 'findUserByEmail no debe exponer el hash');
+    assert.strictEqual(auth.findUserByEmail(db, 'nadie@example.com'), null);
+
     assert.throws(
       () => auth.createUser(db, { email: 'uno@example.com', password: 'otra-distinta' }),
       err => err.code === 'EMAIL_TAKEN',

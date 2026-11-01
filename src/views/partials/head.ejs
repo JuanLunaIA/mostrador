@@ -1,7 +1,42 @@
+<%
+  // Datos de la pagina. Las vistas pueden pasar { title, desc, canonical }.
+  const _titulo = (typeof title !== 'undefined' && title) ? title : 'Mostrador';
+  const _desc = (typeof desc !== 'undefined' && desc)
+    ? desc
+    : 'Pegá el mensaje de WhatsApp del cliente y Mostrador devuelve el presupuesto con precios reales del catálogo. Pensado para ferreterías.';
+  const _path = (typeof canonical !== 'undefined' && canonical) ? canonical : '/';
+  // Open Graph necesita URLs absolutas (WhatsApp no resuelve rutas relativas).
+  // Se arma con la variable de entorno, nunca con el header Host: lo controla el cliente.
+  const _base = (((typeof process !== 'undefined' && process.env && process.env.PUBLIC_BASE_URL) || 'https://vps-6576881-x.dattaweb.com')).replace(/\/+$/, '');
+  const _url = _base + _path;
+  const _img = _base + '/og.png';
+  const _full = _titulo + ' · Ferretería San Luis';
+%>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= typeof title !== 'undefined' ? title : 'Mostrador' %> · Ferretería San Luis</title>
+<title><%= _full %></title>
+<meta name="description" content="<%= _desc %>">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/app.css">
+<% if (typeof noindex !== 'undefined' && noindex) { %><meta name="robots" content="noindex, nofollow">
+<% } %>
+<!-- Open Graph: es lo que lee WhatsApp (y cualquier chat) al pegar el link. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mostrador · Ferretería San Luis">
+<meta property="og:locale" content="es_AR">
+<meta property="og:title" content="<%= _full %>">
+<meta property="og:description" content="<%= _desc %>">
+<meta property="og:url" content="<%= _url %>">
+<meta property="og:image" content="<%= _img %>">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mostrador: del WhatsApp al presupuesto enviado">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= _full %>">
+<meta name="twitter:description" content="<%= _desc %>">
+<meta name="twitter:image" content="<%= _img %>">
 <style>
   /* Componentes que Tailwind no trae: los definimos a mano. El CSS de utilidades
      se compila a public/app.css y se sirve local — cero dependencia de CDN. */

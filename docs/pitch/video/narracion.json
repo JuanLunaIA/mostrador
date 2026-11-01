@@ -1,0 +1,31 @@
+{
+  "voz": "verse",
+  "modelo": "gpt-4o-mini-tts",
+  "instrucciones": "Hablás en español rioplatense, con acento de Rosario, Argentina. Tono cálido y directo, de ferretero explicándole algo a un colega. Ritmo tranquilo pero sin pausas largas. Sin dicción de locutor de radio.",
+  "slides": [
+    {
+      "n": 1,
+      "texto": "En una ferretería de barrio, el mostrador nunca para. Al WhatsApp del dueño llegan mensajes así: hola, tenés doscientos tornillos del ocho por dos y cinco metros de cable, cuánto sale. Todo junto, mal escrito, sin formato. Responder eso bien lleva veinte minutos: buscar en la lista de precios, calcular, escribir. Y si el dueño está atendiendo, ese presupuesto se contesta a la noche. O no se contesta."
+    },
+    {
+      "n": 2,
+      "texto": "Mostrador convierte ese mensaje en un presupuesto en un segundo. Pegás el texto tal como llegó. El sistema entiende qué productos pide, cuántos, y en qué medida. Y arma la tabla con el código, el precio unitario y el total."
+    },
+    {
+      "n": 3,
+      "texto": "La decisión de diseño es esta: el modelo de lenguaje no pone precios. Solo lee. Extrae descripciones, cantidades, medidas y el contacto. Después, un matcher determinístico busca cada cosa contra el catálogo real del negocio. Si no está seguro, no inventa: marca el ítem para revisar. El precio siempre sale de la lista del ferretero."
+    },
+    {
+      "n": 4,
+      "texto": "Esto está corriendo ahora. Es una URL pública, no un video. Medimos diez corridas: la mediana es un segundo con trece, y el peor caso uno con cuarenta. Y si la clave de la inteligencia artificial se cae, el sistema sigue cotizando con el motor por reglas. Y lo declara: modo degradado."
+    },
+    {
+      "n": 5,
+      "texto": "Cada presupuesto queda registrado. La página de impacto muestra cuántos se hicieron, cuánta plata se cotizó y cuántos minutos se ahorraron. Los veinte minutos por presupuesto son un supuesto nuestro, todavía no medido. Lo decimos porque no lo medimos."
+    },
+    {
+      "n": 6,
+      "texto": "El email hoy sale en modo de prueba, declarado en la pantalla: la API paga del proveedor no está contratada. Cambiar a real es una variable de entorno. Mostrador no reemplaza al ferretero. Le devuelve el tiempo que hoy se le va escribiendo presupuestos."
+    }
+  ]
+}
