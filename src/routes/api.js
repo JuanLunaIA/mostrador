@@ -9,8 +9,10 @@ const { rateLimit } = require('../lib/rateLimit');
 const router = express.Router();
 
 // topes por IP: generar gasta tokens, enviar email gasta créditos de EnvíaloSimple
-const limiteCrear = rateLimit({ nombre: 'quotes', max: 30 });
-const limiteEnviar = rateLimit({ nombre: 'send', max: 10 });
+// Configurables por entorno: en la demo varios jurados pueden compartir la misma IP
+// publica (wifi del lugar) y 30/min entre todos se alcanza facil.
+const limiteCrear = rateLimit({ nombre: 'quotes', max: Number(process.env.RATE_MAX_QUOTES || 60) });
+const limiteEnviar = rateLimit({ nombre: 'send', max: Number(process.env.RATE_MAX_SEND || 15) });
 
 
 router.get('/healthz', (req, res) => {

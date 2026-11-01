@@ -229,6 +229,8 @@ El proceso escucha en `127.0.0.1:3000` por defecto (regla del deploy oficial de 
 | `DB_PATH` | `data/mostrador.sqlite` | archivo SQLite (WAL) |
 | `HOST` | `127.0.0.1` | interfaz de escucha; `0.0.0.0` sólo para prueba en red local |
 | `RATE_LIMIT` | activo | `off` desactiva los topes por IP (para correr evals) |
+| `RATE_MAX_QUOTES` | `60` | presupuestos por IP por minuto |
+| `RATE_MAX_SEND` | `15` | envíos de email por IP por minuto |
 
 ---
 
