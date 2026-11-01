@@ -48,7 +48,9 @@ class AuthError extends Error {
 }
 
 function isEnabled(env = process.env) {
-  return String(env.AUTH_ENABLED || '').toLowerCase() === 'true';
+  // Acepta las formas habituales de decir "sí" en un .env: true/1/yes/on.
+  // Cualquier otra cosa (incluido el vacío) deja las cuentas apagadas.
+  return ['true', '1', 'yes', 'on'].includes(String(env.AUTH_ENABLED || '').trim().toLowerCase());
 }
 
 function assertEnabled() {
@@ -316,6 +318,8 @@ module.exports = {
   SCHEMA_PATH,
   SESSION_TTL_MS,
   isEnabled,
+  assertEnabled,
+  normalizeEmail,
   applySchema,
   hashPassword,
   verifyPassword,

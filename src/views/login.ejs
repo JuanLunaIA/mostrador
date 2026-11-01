@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es" data-theme="light"><head><%- include('partials/head', {
+  title: 'Ingresar',
+  desc: 'Entrá a tu cuenta de Mostrador para ver tus presupuestos y tus datos.',
+  noindex: true
+}) %></head>
+<body class="grid min-h-screen place-items-center bg-slate-50 p-6">
+<main class="mx-auto w-full max-w-2xl rounded-2xl bg-white p-8 shadow-sm">
+  <div class="grid gap-6 sm:grid-cols-2">
+    <div>
+      <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Mostrador</div>
+      <h1 class="mt-1 text-2xl font-extrabold">Tu cuenta</h1>
+      <p class="mt-2 text-sm text-slate-500">Entrá para ver los presupuestos que pediste y tener tus datos a mano la próxima vez.</p>
+      <p class="mt-6 text-xs text-slate-500"><a class="link" href="/">Volver al mostrador</a></p>
+    </div>
+    <div>
+      <form method="post" action="/login" class="space-y-3">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <% if (error) { %><p class="rounded-lg bg-amber-50 p-3 text-sm text-amber-700"><%= error %></p><% } %>
+        <label class="block text-sm">
+          <span class="font-semibold">Email</span>
+          <input class="input mt-1 w-full" type="email" name="email" value="<%= email %>" autocomplete="email" autofocus required>
+        </label>
+        <label class="block text-sm">
+          <span class="font-semibold">Contraseña</span>
+          <input class="input mt-1 w-full" type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button class="btn btn-neutral w-full" type="submit">Ingresar</button>
+      </form>
+      <p class="mt-4 text-sm text-slate-500">¿Todavía no tenés cuenta? <a class="link font-semibold" href="/registro">Registrate</a></p>
+    </div>
+  </div>
+</main>
+</body></html>

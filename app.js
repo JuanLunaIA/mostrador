@@ -21,6 +21,11 @@ if (fs.existsSync(path.join(__dirname, 'src', 'schema.sql'))) {
 const app = express();
 app.set('trust proxy', 1); // detras de nginx: la IP real viene en X-Forwarded-For
 
+// Cuentas de usuario: APAGADAS por defecto. Con AUTH_ENABLED=false no se crean
+// tablas users_* ni se monta ninguna ruta nueva. Se enciende sólo a pedido.
+const auth = require('./src/services/auth');
+if (auth.isEnabled()) auth.applySchema(db);
+
 // Cabeceras de seguridad. La app no carga nada de terceros (el CSS se compila y se
 // sirve local), pero usa <style> y <script> inline, de ahi el 'unsafe-inline'.
 app.use((req, res, next) => {
@@ -61,6 +66,20 @@ app.locals.AI_LIVE = Boolean(process.env.OPENAI_API_KEY);
 
 app.use('/', require('./src/routes/index'));
 app.use('/api', require('./src/routes/api'));
+
+// Cuentas de usuario: el router se monta SOLO con el flag encendido.
+if (auth.isEnabled()) {
+  app.use('/', require('./src/routes/auth'));
+} else {
+  // Con las cuentas apagadas esas URLs no existen: misma página 404 del sitio,
+  // sin formularios ni pistas de que el módulo está esperando el flag.
+  const apagadas = new Set(['/login', '/registro', '/config']);
+  app.use((req, res, next) => {
+    const ruta = req.path.replace(/\/+$/, '') || '/';
+    if (apagadas.has(ruta) || ruta.startsWith('/config/')) return res.status(404).render('404', { msg: 'Esa página no existe.' });
+    next();
+  });
+}
 
 // alias de salud en la raiz (el del router vive en /api/healthz)
 app.get('/healthz', (req, res) => res.redirect(307, '/api/healthz'));
