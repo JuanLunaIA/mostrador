@@ -1,0 +1,18 @@
+[Unit]
+Description=Mostrador (DonWeb Day Rosario 2026)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/mostrador
+EnvironmentFile=/opt/mostrador/.env
+ExecStart=/usr/bin/node /opt/mostrador/app.js
+Restart=always
+RestartSec=3
+Environment=NODE_ENV=production
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
