@@ -9,3 +9,10 @@ context/raw/
 
 # PDFs y fuentes primarias: viven en context/raw/, nunca en git
 *.pdf
+
+# Material audiovisual generado (pesado y reproducible con los scripts de la carpeta)
+docs/pitch/video/*.mp3
+docs/pitch/video/*.mp4
+docs/pitch/video/slide.*.png
+docs/pitch/video/seg-*.mp4
+docs/pitch/video/lista.txt
