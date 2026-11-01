@@ -20,6 +20,24 @@ if (fs.existsSync(path.join(__dirname, 'src', 'schema.sql'))) {
 
 const app = express();
 app.set('trust proxy', 1); // detras de nginx: la IP real viene en X-Forwarded-For
+
+// Cabeceras de seguridad. La app no carga nada de terceros (el CSS se compila y se
+// sirve local), pero usa <style> y <script> inline, de ahi el 'unsafe-inline'.
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('Referrer-Policy', 'same-origin');
+  res.set('Content-Security-Policy', [
+    "default-src 'self'",
+    "img-src 'self' data:",
+    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+  ].join('; '));
+  next();
+});
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.urlencoded({ extended: false }));
@@ -37,9 +55,20 @@ app.get('/healthz', (req, res) => res.redirect(307, '/api/healthz'));
 
 
 app.use((req, res) => res.status(404).json({ error: { code: 'not_found', message: `No existe ${req.method} ${req.path}` } }));
+
+// Los errores de parseo del body (JSON roto, body grande) ya vienen con status 4xx.
+// Antes se devolvian todos como 500 con el mensaje interno adentro.
 app.use((err, req, res, _next) => {
+  const status = Number(err.status || err.statusCode) || 500;
+  if (status < 500) {
+    const code = status === 413 ? 'payload_grande' : status === 415 ? 'tipo_no_soportado' : 'body_invalido';
+    const message = status === 413
+      ? 'El mensaje es demasiado grande (máximo 100 KB).'
+      : 'No pude leer el pedido. Mandá un JSON con el campo "texto".';
+    return res.status(status).json({ error: { code, message } });
+  }
   console.error('[mostrador]', err);
-  res.status(500).json({ error: { code: 'internal_error', message: String(err.message || err) } });
+  res.status(500).json({ error: { code: 'internal_error', message: 'Error interno del servidor.' } });
 });
 
 const PORT = Number(process.env.PORT || 3000);

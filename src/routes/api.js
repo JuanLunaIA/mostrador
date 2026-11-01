@@ -5,6 +5,7 @@ const { sendQuoteEmail } = require('../services/email');
 const impact = require('../services/impact');
 const { db, driver } = require('../db');
 const { rateLimit } = require('../lib/rateLimit');
+const { urlPublica } = require('../lib/publicUrl');
 
 const router = express.Router();
 
@@ -27,7 +28,11 @@ router.get('/healthz', (req, res) => {
 
 router.post('/quotes', limiteCrear, async (req, res, next) => {
   try {
-    const texto = String(req.body?.texto || '').trim();
+    // El texto tiene que ser un string: un objeto o un numero no es un pedido.
+    if (typeof req.body?.texto !== 'string') {
+      return res.status(422).json({ error: { code: 'texto_requerido', message: 'Mandá el mensaje del cliente en el campo "texto".' } });
+    }
+    const texto = req.body.texto.trim();
     if (!texto) {
       return res.status(422).json({ error: { code: 'texto_requerido', message: 'Escribí o pegá el mensaje del cliente.' } });
     }
@@ -50,7 +55,7 @@ router.post('/quotes/:token/send', limiteEnviar, async (req, res, next) => {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) {
       return res.status(422).json({ error: { code: 'email_invalido', message: 'Necesito un email válido para enviar.' } });
     }
-    const publicUrl = `${req.protocol}://${req.get('host')}/q/${q.token}`;
+    const publicUrl = urlPublica(q.token);
     const out = await sendQuoteEmail(q, to, publicUrl);
     if (out.ok) {
       marcarEnviado(q.id);
