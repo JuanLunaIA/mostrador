@@ -151,6 +151,8 @@ function getClient() {
   const Ctor = OpenAI.default || OpenAI;
   client = new Ctor({
     apiKey: process.env.OPENAI_API_KEY,
+    // Cualquier proveedor compatible OpenAI (DeepSeek, Groq, OpenRouter, vLLM...).
+    baseURL: process.env.OPENAI_BASE_URL || undefined,
     timeout: Number(process.env.AI_TIMEOUT_MS || 20000),
     maxRetries: 0,
   });
@@ -177,9 +179,9 @@ function validar(data) {
   return parsed.success ? { ok: true, data: parsed.data } : { ok: false, issues: parsed.error.issues };
 }
 
-async function callModel(api, model, rawText, extraMessages = []) {
+async function callModel(api, model, rawText, extraMessages = [], jsonMode = 'schema') {
   const t0 = Date.now();
-  const r = await api.chat.completions.create({
+  const body = {
     model,
     temperature: 0.1,
     messages: [
@@ -187,8 +189,22 @@ async function callModel(api, model, rawText, extraMessages = []) {
       ...extraMessages,
       { role: 'user', content: rawText },
     ],
-    response_format: { type: 'json_schema', json_schema: { name: 'pedido', strict: true, schema: JSON_SCHEMA } },
-  });
+  };
+  // OpenAI acepta json_schema estricto; DeepSeek & cia. solo json_object.
+  body.response_format = jsonMode === 'schema'
+    ? { type: 'json_schema', json_schema: { name: 'pedido', strict: true, schema: JSON_SCHEMA } }
+    : { type: 'json_object' };
+
+  let r;
+  try {
+    r = await api.chat.completions.create(body);
+  } catch (e) {
+    const msg = String((e && e.message) || '');
+    if (jsonMode === 'schema' && /response_format|json_schema|unsupported|invalid_request|unknown|not supported/i.test(msg)) {
+      return callModel(api, model, rawText, extraMessages, 'object');
+    }
+    throw e;
+  }
   const latency_ms = Date.now() - t0;
   const content = r.choices?.[0]?.message?.content || '';
   let parsed = null;

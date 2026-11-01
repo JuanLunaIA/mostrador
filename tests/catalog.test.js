@@ -27,3 +27,33 @@ test('descripcion fuera de catalogo -> sku null, no inventa precio', () => {
   assert.strictEqual(m.precio_ars, 0);
   assert.strictEqual(m.requiere_revision, true);
 });
+
+// --- Lo que devuelve el modelo cuando el cliente escribe como habla ---
+// "2 por 1.5", "del 8", "50 kg" son formas normales de pedir en un mostrador.
+
+test('entiende "cable de 2 por 1.5" (por = x)', () => {
+  const m = matchItem('cable de 2 por 1.5', PRODUCTS);
+  assert.strictEqual(m.sku, 'CAB-2x15');
+  assert.ok(m.confianza >= 0.55, `confianza ${m.confianza} deberia superar el umbral`);
+});
+
+test('entiende "cable de 2 por 1,5" con coma decimal', () => {
+  const m = matchItem('cable de 2 por 1,5', PRODUCTS);
+  assert.strictEqual(m.sku, 'CAB-2x15');
+});
+
+test('entiende "tirafondos del 8" contra tornillo 8 x 2', () => {
+  const m = matchItem('tirafondos del 8', PRODUCTS);
+  assert.strictEqual(m.sku, 'TOR-8x2');
+  assert.ok(m.confianza >= 0.55, `confianza ${m.confianza} deberia superar el umbral`);
+});
+
+test('entiende "4 bolsas de cemento"', () => {
+  const m = matchItem('bolsas de cemento', PRODUCTS);
+  assert.strictEqual(m.sku, 'CEM-50');
+});
+
+test('no inventa match cuando solo coincide el numero', () => {
+  const m = matchItem('amalgama dental 8', PRODUCTS);
+  assert.strictEqual(m.sku, null);
+});

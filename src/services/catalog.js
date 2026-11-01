@@ -1,12 +1,14 @@
 'use strict';
 
-const STOP = new Set(['de','del','la','el','los','las','un','una','unos','unas','y','por','para','con','que','me','mi','necesito','quiero','pasame','precio','cuanto','sale','salen','hola','buenas','tengo','tenes','hay','seria','son','es','al','a','en','x','si','todo','esta','estan','unidad','unidades','u','kg','kilo','kilos','m','mt','mts','metro','metros','bolsa','bolsas','barra','barras','balde','baldes','lata','latas','cartucho','cartuchos','par','pares','litro','litros','lt','lts','pulgada','pulgadas']);
+const STOP = new Set(['de','del','la','el','los','las','un','una','unos','unas','y','por','para','con','que','me','mi','necesito','quiero','pasame','precio','cuanto','sale','salen','hola','buenas','tengo','tenes','hay','seria','son','es','al','a','en','x','si','todo','esta','estan','unidad','unidades','u','kg','kilo','kilos','m','mm','cm','mt','mts','metro','metros','bolsa','bolsas','barra','barras','balde','baldes','lata','latas','cartucho','cartuchos','par','pares','litro','litros','lt','lts','pulgada','pulgadas']);
 
 function norm(s) {
   return String(s || '')
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/,/g, '.')
+    // "2 por 1.5" y "2 x 1.5" son la misma medida que "2x1.5".
+    .replace(/\b(\d+(?:\.\d+)?)\s*(?:x|por)\s*(\d+(?:\.\d+)?)\b/g, '$1x$2')
     .replace(/[^a-z0-9.\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -28,6 +30,17 @@ function tokens(s) {
 }
 
 
+const SOLO_NUMERO = /^\d+(?:\.\d+)?$/;
+const ES_MEDIDA = /^\d+(?:\.\d+)?x\d/;
+
+// "8" (lo que escribe el cliente) debe encontrar "8x2" (la medida del catálogo).
+function coincide(a, b) {
+  if (a === b) return true;
+  if (SOLO_NUMERO.test(a) && ES_MEDIDA.test(b) && b.startsWith(a)) return true;
+  if (SOLO_NUMERO.test(b) && ES_MEDIDA.test(a) && a.startsWith(b)) return true;
+  return false;
+}
+
 function matchItem(descripcion, productos, umbral = 0.55) {
   const q = tokens(descripcion);
   let best = { sku: null, nombre: null, unidad: null, precio_ars: 0, confianza: 0, matched_on: [] };
@@ -35,7 +48,7 @@ function matchItem(descripcion, productos, umbral = 0.55) {
 
   for (const p of productos) {
     const hay = new Set(tokens(`${p.nombre} ${p.aliases || ''}`));
-    const hit = q.filter(t => hay.has(t));
+    const hit = q.filter(t => [...hay].some(h => coincide(t, h)));
     if (!hit.length) continue;
     const cobertura = hit.length / q.length;
     const precision = hit.length / Math.max(hay.size, 1);
