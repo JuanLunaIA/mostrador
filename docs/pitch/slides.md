@@ -24,13 +24,17 @@ Cue: los 20 minutos son SUPUESTO declarado, no medición. Si preguntan, se dice 
 - https://vps-6576881-x.dattaweb.com/ — abierta ahora
 - Cloud Server DonWeb #6576881 · nginx → Node → SQLite
 - HTTPS propio con certificado Let's Encrypt
-- IA gpt-4o-mini en vivo: 1,2–4,6 s por presupuesto
+- IA gpt-4o-mini en vivo: p50 1,1 s, p95 1,2 s (10 corridas medidas)
 - Ahora pego un chat de WhatsApp y sale el presupuesto
 
 <!-- 0:20–0:50 · "Esto no es un mockup: está corriendo ahora mismo en un Cloud Server de DonWeb, con HTTPS y certificado propio."
 Cue: abrir la URL en el segundo 20 y no volver a las slides hasta 1:40. -->
 
 ---
+
+<style scoped>
+h1 { font-size: 34px; }
+</style>
 
 # Core flow: WhatsApp → IA → catálogo → presupuesto
 
@@ -40,7 +44,7 @@ Cue: abrir la URL en el segundo 20 y no volver a las slides hasta 1:40. -->
 - Presupuesto cotizado en 1–4 s, listo para enviar
 - Email en mock declarado: se genera y se renderiza en /outbox
 
-<!-- 0:50–1:40 · "Este es el mensaje que le llegó a la ferretería por WhatsApp. Lo pego." → "La IA lee el pedido, el catálogo real pone los precios y el presupuesto sale en uno a cuatro segundos." → "Ahora lo mando por email."
+<!-- 0:50–1:40 · "Este es el mensaje que le llegó a la ferretería por WhatsApp. Lo pego." → "La IA lee el pedido, el catálogo real pone los precios y el presupuesto sale en cerca de un segundo." → "Ahora lo mando por email."
 Cue: nunca decir "acá llega el email al cliente". Se genera y se muestra el HTML real en /outbox/<token>. -->
 
 ---
@@ -50,7 +54,7 @@ Cue: nunca decir "acá llega el email al cliente". Se genera y se muestra el HTM
 - Navegador → nginx → Node → SQLite: todo sobre DonWeb
 - OpenAI y EnvíaloSimple: las dos cajas externas
 - El modelo nunca devuelve precios; solo ítems y cantidades
-- Sin match con confianza ≥ 0,55: "revisar" en amarillo
+- Sin match con confianza ≥ 0,55: “revisar” en amarillo
 - Auditoría por llamada: modelo, latencia, tokens, reparaciones
 
 <!-- 1:40–2:20 · "El modelo de lenguaje nunca devuelve un precio: sólo extrae qué pidió el cliente. El precio lo pone el catálogo de la ferretería. Por eso no puede inventar un número: si un ítem no matchea con confianza suficiente, se muestra en amarillo como 'revisar' en vez de cotizarse. Cada llamada queda auditada con modelo, latencia y tokens — está en el panel de abajo del presupuesto."
@@ -77,7 +81,7 @@ Cue: el envío de email está en mock declarado; la integración está escrita c
 
 - Piloto con 5 ferreterías del Gran Rosario sobre infraestructura DonWeb
 - Primer paso: cronometrar 5 presupuestos reales de mostrador
-- $12.000 ARS/mes por ferretería · infraestructura ≈ u$s 3/mes
+- \$12.000 ARS/mes por ferretería · infraestructura ≈ u\$s 3/mes
 - Próximo paso: login por comercio y multi-sucursal
 - https://vps-6576881-x.dattaweb.com/ · github.com/JuanLunaIA/mostrador
 

@@ -7,7 +7,7 @@
 | Qué | Estado hoy | Qué decir si preguntan |
 |---|---|---|
 | URL pública | **En vivo**: https://vps-6576881-x.dattaweb.com/ | Nada, se muestra |
-| IA | **gpt-4o-mini en vivo**, 1,2–4,6 s por presupuesto | "El modelo extrae; el catálogo pone el precio" |
+| IA | **gpt-4o-mini en vivo**: p50 1,1 s / p95 1,2 s sobre 10 corridas medidas contra la URL pública | "El modelo extrae; el catálogo pone el precio" |
 | Email | **Mock**, declarado en la UI | "El cliente HTTP está escrito contra el contrato de EnvíaloSimple. Corre en mock porque la API transaccional es un add-on pago que esta cuenta no tiene contratado, y además hay que verificar el dominio remitente. Pasar a live es una variable de entorno, y la UI nunca dice 'enviado' cuando fue mock" |
 | Email visible | **Sí**, renderizado en `/outbox/<token>` | Se puede mostrar: es el HTML real que sale |
 | Datos de impacto | En vivo desde `impact_events` | — |
@@ -20,7 +20,7 @@
 |---|---|---|
 | **0:00–0:20** Problema | "Existe pérdida de ventas por atender pedidos a mano por WhatsApp en las ferreterías de barrio del Gran Rosario: cada presupuesto se arma releyendo el chat, buscando el precio en una planilla y reescribiéndolo a mano. Son veinte minutos por presupuesto. Y el Gran Rosario tiene 11,5% de desocupación, la tasa más alta del país — INDEC, segundo trimestre 2026." | Slide 1: la frase del problema + el 11,5% citado con fuente |
 | **0:20–0:50** Demo en frío | "Esto no es un mockup: está corriendo ahora mismo en un Cloud Server de DonWeb, con HTTPS y certificado propio." | **URL pública en pantalla.** Pantalla de inicio de Mostrador |
-| **0:50–1:40** Core flow | "Este es el mensaje que le llegó a la ferretería por WhatsApp. Lo pego." → "La IA lee el pedido, el catálogo real pone los precios y el presupuesto sale en uno a cuatro segundos." → "Ahora lo mando por email." | Pegar el ejemplo → tabla con SKU y precios → total → "Enviar por email" → **el email renderizado** (se abre el HTML del correo) → `/impacto` sumando |
+| **0:50–1:40** Core flow | "Este es el mensaje que le llegó a la ferretería por WhatsApp. Lo pego." → "La IA lee el pedido, el catálogo real pone los precios y el presupuesto sale en cerca de un segundo." → "Ahora lo mando por email." | Pegar el ejemplo → tabla con SKU y precios → total → "Enviar por email" → **el email renderizado** (se abre el HTML del correo) → `/impacto` sumando |
 | **1:40–2:20** Arquitectura | "El modelo de lenguaje **nunca** devuelve un precio: sólo extrae qué pidió el cliente. El precio lo pone el catálogo de la ferretería. Por eso no puede inventar un número: si un ítem no matchea con confianza suficiente, se muestra en amarillo como 'revisar' en vez de cotizarse. Cada llamada queda auditada con modelo, latencia y tokens — está en el panel de abajo del presupuesto." | Slide con el C4: navegador → nginx → Node → SQLite, con OpenAI y EnvíaloSimple como cajas externas. Todas las cajas son productos de DonWeb salvo OpenAI |
 | **2:20–2:50** Evidencia e impacto | "Corre sobre infraestructura DonWeb y está integrado con EnvíaloSimple. El impacto lo medimos en el producto: cada presupuesto registra 18 minutos ahorrados, y el contador sale de la base, no de una slide. Y hay contexto provincial: la UNRaf relevó que las PyMEs de Santa Fe están en las primeras etapas de digitalización y que la IA todavía no es una práctica extendida. Cadena de cambio y ODS 8.3 y 9.3 en el README." | Slide con la cadena de cambio y los 3 indicadores IRIS+ |
 | **2:50–3:00** Ask y cierre | "Buscamos un piloto con 5 ferreterías del Gran Rosario sobre infraestructura DonWeb. Porque esto es exactamente lo que dice su lema: Internet para todos." | Slide final: URL + repo + QR |
@@ -51,8 +51,9 @@
 
 1. Abrir la URL pública en una pestaña y dejarla cargada.
 2. Tener el ejemplo de WhatsApp copiado en el portapapeles.
-3. Batería y notificaciones del celular apagadas.
-4. Tener `/impacto` ya con datos de la demo (no arrancar en cero).
-5. Tener una pestaña con `/outbox/<token>` de una corrida previa, por si el envío en vivo tarda.
-6. Video de respaldo de 60 s grabado antes de las 18:30, por si falla el wifi.
-7. **Probar la URL desde el celular con datos móviles**, no desde el wifi del lugar.
+3. **Tener a mano el caso "me pasas precio de un taladro?"** — devuelve el ítem marcado *revisar* con confianza 0 y total $0, porque el taladro no está en el catálogo de 15 productos. Es la prueba en vivo de que el sistema no inventa un precio. Medido: `sku=null`, `requiere_revision=true`.
+4. Batería y notificaciones del celular apagadas.
+5. Tener `/impacto` ya con datos de la demo (no arrancar en cero).
+6. Tener una pestaña con `/outbox/<token>` de una corrida previa, por si el envío en vivo tarda.
+7. Video de respaldo de 60 s grabado antes de las 18:30, por si falla el wifi.
+8. **Probar la URL desde el celular con datos móviles**, no desde el wifi del lugar.

@@ -4,7 +4,7 @@
 
 ## Descripción corta
 
-Mostrador es una herramienta para una ferretería de barrio de Rosario. El dueño pega el mensaje de WhatsApp del cliente tal como llegó —mal escrito, con coma decimal, sin formato— y en 1,2 a 4,6 segundos sale un presupuesto con SKU, precio unitario y total, listo para enviar. La IA sólo extrae ítems, cantidades y datos de contacto: el precio lo pone el catálogo de la ferretería. Si un ítem no se reconoce con confianza suficiente, se marca "revisar" en lugar de inventar un importe. Corre en un Cloud Server de DonWeb con Node 22 y SQLite. Hoy el envío de email está en modo mock declarado; el HTML exacto del correo se puede ver en `/outbox/<token>`.
+Mostrador es una herramienta para una ferretería de barrio de Rosario. El dueño pega el mensaje de WhatsApp del cliente tal como llegó —mal escrito, con coma decimal, sin formato— y en alrededor de un segundo sale un presupuesto con SKU, precio unitario y total, listo para enviar. La IA sólo extrae ítems, cantidades y datos de contacto: el precio lo pone el catálogo de la ferretería. Si un ítem no se reconoce con confianza suficiente, se marca "revisar" en lugar de inventar un importe. Corre en un Cloud Server de DonWeb con Node 22 y SQLite. Hoy el envío de email está en modo mock declarado; el HTML exacto del correo se puede ver en `/outbox/<token>`.
 
 ## Descripción larga
 
@@ -41,7 +41,7 @@ Requiere Node `>= 22` (el deploy corre 22.23.4). `npm test` corre la suite y `np
 | Qué | Estado | Detalle |
 |---|---|---|
 | URL pública | **Real** | HTTPS con Let's Encrypt, nginx → Node en `127.0.0.1:3000` → SQLite. `/api/healthz` responde `ok:true`. |
-| IA en vivo | **Real** | `gpt-4o-mini`, 1,2 a 4,6 s por presupuesto, medido contra la URL pública. |
+| IA en vivo | **Real** | `gpt-4o-mini`. 10 corridas contra la URL pública: p50 **1,1 s**, p95 **1,2 s**, rango 0,9–1,4 s. |
 | Precios | **Real** | Salen de la tabla `products`, nunca del modelo. El catálogo de demo tiene 15 productos. |
 | Email | **Mock declarado** | La API transaccional de EnvíaloSimple es un add-on pago que esta cuenta no tiene contratado, y falta verificar el dominio remitente. Nunca se envió un email real. El HTML se ve en `/outbox/<token>` y la UI dice "Modo mock", no "enviado". |
 | 20 minutos por presupuesto | **Supuesto** | No está medido. Es el número que sostiene el caso de negocio y el primer paso del piloto es cronometrarlo. |
