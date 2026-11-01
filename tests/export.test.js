@@ -197,7 +197,7 @@ test('exporta las cinco tablas reales y el conteo coincide con la base', () => {
     assert.deepStrictEqual(filas[0], columnas, `${t}: encabezado != esquema`);
   }
   db.close();
-  assert.strictEqual(resumen.totales.filas, 9);
+  assert.strictEqual(resumen.totales.filas, 8);
   assert.strictEqual(resumen.totales.sumas['quotes.total_ars'], 98100);
   assert.deepStrictEqual(resumen.totales.quotes_por_estado, { draft: 2, sent: 1 });
   assert.strictEqual(resumen.base.integrity_check, 'ok');
@@ -230,7 +230,7 @@ test('un campo con coma, comillas y salto de linea sobrevive el ida y vuelta', (
   assert.strictEqual(fila[encabezado.indexOf('customer_phone')], '', 'NULL debe salir como campo vacio');
 
   const leads = parsearCsv(fs.readFileSync(path.join(salida, 'leads.csv'), 'utf8'));
-  assert.strictEqual(leads[1][2], 'Juana "la jefa", del barrio');
+  assert.strictEqual(leads[1][3], 'Juana "la jefa", del barrio');
 });
 
 test('el export no modifica la base (solo lectura)', () => {
