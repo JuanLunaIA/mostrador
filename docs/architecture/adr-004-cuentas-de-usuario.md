@@ -65,19 +65,19 @@ El reloj de esta entrega no alcanza para auditar todo eso con la seriedad que pi
 
 ## Verificación
 
-Corrida completa al cierre de esta entrega (28 tests previos + 9 nuevos):
+Corrida completa al cierre (los 28 tests previos, los 9 de auth y 12 de exportación que se sumaron en paralelo):
 
 ```text
 $ node --test tests/
 ...
-ℹ tests 37
+ℹ tests 49
 ℹ suites 0
-ℹ pass 37
+ℹ pass 49
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 2726.387201
+ℹ duration_ms 2571.835767
 ```
 
 Sólo el archivo nuevo:
