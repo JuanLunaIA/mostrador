@@ -1,0 +1,27 @@
+[
+  {
+    "id": "caso-1-cantidad-explicita",
+    "input": "hola tenes 200 tornillos del 8x2?",
+    "expect": { "min_items": 1, "must_match_sku": "TOR-8x2", "cantidad": 200 }
+  },
+  {
+    "id": "caso-2-dos-items-unidades",
+    "input": "pasame precio de 5 metros cable 2x1,5 y 3 llaves de paso 1/2",
+    "expect": { "min_items": 2, "must_include_skus": ["CAB-2x15", "LLA-PAS12"] }
+  },
+  {
+    "id": "caso-3-sin-contacto",
+    "input": "cuanto sale un balde de latex 20 litros?",
+    "expect": { "min_items": 1, "must_match_sku": "PIN-LAT20", "customer_email_null": true }
+  },
+  {
+    "id": "caso-4-contacto-embebido",
+    "input": "soy Juan de la obra de San Luis 1450, mandame presupuesto de 20 bolsas de cemento y 10 hierros del 8, mi mail juan@obrasanluis.com",
+    "expect": { "min_items": 2, "must_include_skus": ["CEM-50", "HIE-8"], "customer_email": "juan@obrasanluis.com" }
+  },
+  {
+    "id": "caso-5-vacio",
+    "input": "   ",
+    "expect": { "http_status": 422 }
+  }
+]

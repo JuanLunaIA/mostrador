@@ -103,23 +103,35 @@ function degradeExtract(rawText) {
     if (!m) continue;
     const cantidad = Number(String(m[1]).replace(',', '.'));
     if (!(cantidad > 0)) continue;
+    const antes = trozo.slice(0, m.index).trim();
     let resto = trozo.slice(m.index + m[0].length);
     const uni = resto.match(/^\s*(unidades?|u|kg|kilos?|mts?|metros?|bolsas?|barras?|baldes?|latas?|cartuchos?|pares?|litros?|lts?)\b\.?\s*/i);
-    const unidad = uni ? unidadDe(uni[1]) : 'unidad';
+    let unidad = uni ? unidadDe(uni[1]) : 'unidad';
     if (uni) resto = resto.slice(uni[0].length);
     // corta la cola conversacional ("? soy Juan", ". gracias") sin partir decimales (2x1.5)
-    const descripcion = resto
+    let descripcion = resto
       .replace(/^(de|del|la|el|los|las)\s+/i, '')
       .split(/[?!]/)[0]
       .replace(/\.\s+.*$/, '')
       .replace(/\.$/, '')
       .trim();
+    let cant = cantidad;
+    if (descripcion.length < 3) {
+      // orden invertido ("cuanto sale un balde de latex 20 litros") -> la descripcion esta antes
+      descripcion = antes
+        .replace(/^.*?\b(cuanto|precio|sale|salen|necesito|quiero|pasame|tenes|hay)\b\s*/i, '')
+        .replace(/^(un|una|unos|unas)\s+/i, '')
+        .split(/[?!]/)[0]
+        .trim();
+      cant = 1;
+      unidad = 'unidad';
+    }
     if (descripcion.length < 3) continue;
     if (!/[a-záéíóúñ]/i.test(descripcion)) continue;
     if (/^(hola|buenas|buen dia|buenas tardes|gracias|soy)\b/i.test(descripcion)) continue;
     base.items.push({
       descripcion_raw: descripcion,
-      cantidad,
+      cantidad: cant,
       unidad,
       sku_sugerido: null,
     });
