@@ -32,6 +32,11 @@ El exportador abre la base con `readOnly: true` **y** `PRAGMA query_only = 1`, l
 dentro de una única transacción (los `COUNT(*)` y las filas salen de la misma foto) y
 corta con error si el conteo no coincide. Nunca escribe en la base.
 
+Ojo con los permisos en producción: si la base está en WAL y el usuario que corre el
+export no puede escribir en el directorio, SQLite no puede crear el `-shm` y la lectura
+falla. Corré el export como el usuario de la app (`mostrador`), o hacé primero
+`node deploy/sqlite-backup.js backup ...` y exportá la copia, que ya viene consolidada.
+
 ## Aclaración importante: no existe `quote_items`
 
 Los ítems de un presupuesto **no** están en una tabla aparte: viven adentro de
