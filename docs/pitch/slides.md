@@ -41,7 +41,7 @@ h1 { font-size: 34px; }
 - El dueño pega el mensaje del cliente, tal como llega
 - La IA extrae ítems, cantidades y contacto; nunca precios
 - El catálogo real de la ferretería pone SKU y precio
-- Presupuesto cotizado en 1–4 s, listo para enviar
+- Presupuesto cotizado en cerca de un segundo, listo para enviar
 - Email en mock declarado: se genera y se renderiza en /outbox
 
 <!-- 0:50–1:40 · "Este es el mensaje que le llegó a la ferretería por WhatsApp. Lo pego." → "La IA lee el pedido, el catálogo real pone los precios y el presupuesto sale en cerca de un segundo." → "Ahora lo mando por email."
@@ -58,7 +58,7 @@ Cue: nunca decir "acá llega el email al cliente". Se genera y se muestra el HTM
 - Auditoría por llamada: modelo, latencia, tokens, reparaciones
 
 <!-- 1:40–2:20 · "El modelo de lenguaje nunca devuelve un precio: sólo extrae qué pidió el cliente. El precio lo pone el catálogo de la ferretería. Por eso no puede inventar un número: si un ítem no matchea con confianza suficiente, se muestra en amarillo como 'revisar' en vez de cotizarse. Cada llamada queda auditada con modelo, latencia y tokens — está en el panel de abajo del presupuesto."
-Cue: no mostrar código; si preguntan, abrir el panel "¿Cómo se generó?". -->
+Cue: no mostrar código; si preguntan, abrir el panel "¿Cómo se generó?". Si hay tiempo: pegar "me pasas precio de un taladro?" — sale "revisar", confianza 0 y total \$0. -->
 
 ---
 
