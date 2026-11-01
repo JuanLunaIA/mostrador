@@ -58,7 +58,7 @@ Cue: nunca decir "acá llega el email al cliente". Se genera y se muestra el HTM
 - Auditoría por llamada: modelo, latencia, tokens, reparaciones
 
 <!-- 1:40–2:20 · "El modelo de lenguaje nunca devuelve un precio: sólo extrae qué pidió el cliente. El precio lo pone el catálogo de la ferretería. Por eso no puede inventar un número: si un ítem no matchea con confianza suficiente, se muestra en amarillo como 'revisar' en vez de cotizarse. Cada llamada queda auditada con modelo, latencia y tokens — está en el panel de abajo del presupuesto."
-Cue: no mostrar código; si preguntan, abrir el panel "¿Cómo se generó?". Si hay tiempo: pegar "me pasas precio de un taladro?" — sale "revisar", confianza 0 y total \$0. -->
+Cue: no mostrar código; si preguntan, abrir el panel "¿Cómo se generó?". Si hay tiempo: pegar "me pasas precio de un taladro?" — sale "revisar", confianza 0 y total en cero. -->
 
 ---
 

@@ -3,6 +3,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const express = require('express');
 const { getByToken } = require('../services/presupuesto');
+const { rutaOutbox } = require('../lib/outbox');
 const impact = require('../services/impact');
 
 const router = express.Router();
@@ -29,8 +30,8 @@ router.get('/impacto', (req, res) => {
 });
 
 router.get('/outbox/:token', (req, res) => {
-  const f = path.join(OUTBOX, `${req.params.token}.html`);
-  if (!fs.existsSync(f)) return res.status(404).send('sin email en modo mock para ese token');
+  const f = rutaOutbox(OUTBOX, req.params.token);
+  if (!f || !fs.existsSync(f)) return res.status(404).send('sin email en modo mock para ese token');
   res.type('html').send(fs.readFileSync(f, 'utf8'));
 });
 
