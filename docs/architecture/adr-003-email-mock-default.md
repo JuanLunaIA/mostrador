@@ -4,7 +4,12 @@
 
 ## Contexto
 
-El envío de email por EnvíaloSimple Transaccional exige una cuenta con el **dominio del remitente verificado**. No hay credencial disponible al momento del build, y sin credencial cualquier intento de envío real devuelve `domain_invalid` o `from_required`. Al mismo tiempo, el email en el flujo es una pieza central del valor (el presupuesto tiene que *llegar*), así que no se puede simplemente omitir.
+El envío de email por EnvíaloSimple Transaccional exige dos cosas que no están disponibles al momento del build:
+
+1. **El add-on "API o SMTP Premium" contratado.** Verificado en el panel (Cloud & IaaS → API & SMTP Email): la cuenta solo ve la página de contratación, sin servicio activo. Es un producto pago, no una configuración.
+2. **El dominio del remitente verificado.** Sin eso, cualquier intento de envío real devuelve `domain_invalid` o `from_required`.
+
+Al mismo tiempo, el email en el flujo es una pieza central del valor (el presupuesto tiene que *llegar*), así que no se puede simplemente omitir.
 
 ## Decisión
 
@@ -14,7 +19,7 @@ El envío de email por EnvíaloSimple Transaccional exige una cuenta con el **do
 POST https://api.envialosimple.email/api/v1/mail/send
 Authorization: Bearer <ENVIALOSIMPLE_API_KEY>
 Content-Type: application/json
-{ from, to: [{email}], subject, html, preview_text }
+{ from, to: [{email}], subject, html }
 ```
 
 Se prueba primero ese host y, si falla por red, `https://backend.envialosimple.email` (el que usa la página de producto). Si `EMAIL_MODE != live` o falta la API key, escribe el mismo HTML en `data/outbox/<token>.html` y lo sirve en `/outbox/:token`.

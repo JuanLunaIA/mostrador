@@ -236,7 +236,7 @@ El proceso escucha en `127.0.0.1:3000` por defecto (regla del deploy oficial de 
 
 1. **Sin streaming SSE** (ADR-002): un JSON estructurado de 2-4 s no gana nada stremando tokens y suma riesgo en nginx.
 2. **`node:sqlite` con fallback a `better-sqlite3`** (ADR-001): en desarrollo el runtime es Node 26 (ABI 147) y `better-sqlite3` no publica binario precompilado para esa versión; en el servidor corre Node **22.23.4**, donde `node:sqlite` también funciona nativo (verificado con `process.versions.sqlite`). Resultado: cero compilación nativa en ningún entorno.
-3. **Email en modo mock por defecto** (ADR-003): no hay cuenta de EnvíaloSimple con dominio verificado. El cliente HTTP está implementado contra el contrato real publicado y pasa a live con una variable de entorno. La UI nunca dice "enviado" cuando fue mock.
+3. **Email en modo mock por defecto** (ADR-003): la API transaccional de EnvíaloSimple ("API o SMTP Premium") es un add-on **pago** que esta cuenta no tiene contratado — verificado en el panel (Cloud & IaaS → API & SMTP Email: solo la página de contratación, sin servicio activo). Además requiere verificar el dominio remitente. El cliente HTTP está implementado contra el contrato real publicado y pasa a live cambiando `EMAIL_MODE`. La UI nunca dice "enviado" cuando fue mock: dice "Modo mock: ver el email".
 4. **daisyUI por CDN no aplica `.btn`/`.input`**: se reemplazó por ~40 líneas de CSS propio en `src/views/partials/head.ejs`. Tailwind por CDN se mantiene.
 5. **Base de conocimiento comprimida**: `context/raw/` (PDFs primarios, fuera de git) + `context/digests/` (5 cards). No se versionaron `chunks/` ni un índice de embeddings: el jurado lee el producto, no un pipeline de RAG.
 

@@ -8,7 +8,7 @@
 |---|---|---|
 | URL pública | **En vivo**: https://vps-6576881-x.dattaweb.com/ | Nada, se muestra |
 | IA | **gpt-4o-mini en vivo**, 1,2–4,6 s por presupuesto | "El modelo extrae; el catálogo pone el precio" |
-| Email | **Mock**, declarado en la UI | "El cliente HTTP está escrito contra el contrato de EnvíaloSimple; corre en mock porque esa cuenta pide verificación de dominio. Pasar a live es una variable de entorno, la UI nunca dice 'enviado' cuando fue mock" |
+| Email | **Mock**, declarado en la UI | "El cliente HTTP está escrito contra el contrato de EnvíaloSimple. Corre en mock porque la API transaccional es un add-on pago que esta cuenta no tiene contratado, y además hay que verificar el dominio remitente. Pasar a live es una variable de entorno, y la UI nunca dice 'enviado' cuando fue mock" |
 | Email visible | **Sí**, renderizado en `/outbox/<token>` | Se puede mostrar: es el HTML real que sale |
 | Datos de impacto | En vivo desde `impact_events` | — |
 
