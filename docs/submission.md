@@ -14,7 +14,7 @@ Mostrador resuelve el paso que hace perder la venta. El dueño pega el mensaje d
 
 La decisión de arquitectura que sostiene el producto es una sola: **el modelo extrae, el catálogo cotiza**. El LLM devuelve únicamente descripciones, cantidades y datos de contacto, con `json_schema` estricto, validación zod y un reintento de reparación. Tiene prohibido por prompt devolver importes o SKUs. El precio sale siempre de la tabla `products` de la ferretería. Un ítem que el matcher no vincula con confianza mayor o igual a 0,55 se marca `requiere_revision` en amarillo, en vez de cotizarse con un número inventado. Cada llamada queda auditada con modelo, latencia, tokens y reparaciones de schema. Si falta la clave de OpenAI, la app funciona con un extractor determinístico y lo dice en pantalla.
 
-El impacto se mide dentro del producto: cada presupuesto registra los minutos ahorrados en `impact_events` y el contador de `/impacto` sale de la base, no de una slide. La suite tiene 19 tests y los 5 casos dorados se corrieron contra la URL pública. El baseline de 20 minutos sigue siendo un supuesto: el primer paso del piloto es cronometrar presupuestos reales en cinco ferreterías del Gran Rosario.
+El impacto se mide dentro del producto: cada presupuesto registra los minutos ahorrados en `impact_events` y el contador de `/impacto` sale de la base, no de una slide. La suite tiene 49 tests y los 5 casos dorados se corrieron contra la URL pública. El baseline de 20 minutos sigue siendo un supuesto: el primer paso del piloto es cronometrar presupuestos reales en cinco ferreterías del Gran Rosario.
 
 ## Links
 
@@ -48,7 +48,7 @@ Requiere Node `>= 22` (el deploy corre 22.23.4). `npm test` corre la suite y `np
 | Autenticación | **No hay** | Cualquiera con la URL puede generar presupuestos. Sirve para la demo, no para un piloto real. |
 | Rate limit | **Parcial** | En memoria y por IP: se reinicia con el proceso y no se comparte entre instancias. |
 | Persistencia | **Limitada** | SQLite de un solo archivo; no soporta más de un proceso escribiendo. |
-| Tests | **Real** | 19 tests locales y 5/5 casos dorados ejecutados contra la URL pública. |
+| Tests | **Real** | 49 tests locales y 5/5 casos dorados ejecutados contra la URL pública. |
 | 11,5% de desocupación | **Evidencia** | INDEC, EPH 2º trimestre 2026, Cuadro 3.2. Es la tasa más alta de los 31 aglomerados. |
 | UNRaf 2022 | **Evidencia con alcance** | Relevamiento de PyMEs **manufactureras** de Santa Fe, no de comercios. Se usa como contexto provincial. |
 

@@ -211,7 +211,7 @@ npm install
 cp .env.example .env      # OPENAI_API_KEY opcional: sin ella arranca en modo degradado
 node src/seed.js          # 15 productos de ferretería
 npm start                 # http://127.0.0.1:3000
-npm test                  # 12 tests (db, matcher, extractor, guard de precios)
+npm test                  # 49 tests (db, matcher, extractor, guard de precios, auth, export, outbox, url publica)
 npm run evals             # 5 casos dorados contra el servidor corriendo
 ```
 
