@@ -76,6 +76,17 @@ const PORT = Number(process.env.PORT || 3000);
 // 127.0.0.1; a internet se expone unicamente nginx. Se puede abrir con HOST=0.0.0.0
 // para pruebas en red local.
 const HOST = process.env.HOST || '127.0.0.1';
+// Un clon nuevo trae la base vacia: sin catálogo, todos los precios salen $0 y el
+// jurado que se saltea `node src/seed.js` ve un producto roto. Sembrar sólo si está vacío.
+try {
+  if (db.prepare('select count(*) as n from products').get().n === 0) {
+    console.log('[mostrador] catálogo vacío: sembrando los 15 productos');
+    require('./src/seed');
+  }
+} catch (e) {
+  console.error('[mostrador] no pude sembrar el catálogo:', e.message);
+}
+
 app.listen(PORT, HOST, () => {
   console.log(`mostrador escuchando en http://${HOST}:${PORT} (db=${driver} ${DB_PATH}, ai=${app.locals.AI_LIVE ? 'live' : 'degraded'}, email=${app.locals.EMAIL_MODE})`);
 });
