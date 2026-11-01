@@ -23,17 +23,17 @@
   <p class="mt-2 text-slate-600">Pegá el mensaje del cliente tal como llegó. Mostrador extrae los ítems, los cotiza contra el catálogo real y te deja el presupuesto listo para mandar.</p>
 
   <div class="mt-4 grid grid-cols-3 gap-3">
-    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200 min-w-0">
       <div class="text-xs uppercase tracking-wider text-slate-400">Presupuestos</div>
-      <div class="text-xl font-extrabold"><%= counters.presupuestos %></div>
+      <div class="text-base sm:text-xl font-extrabold tabular-nums leading-tight"><%= counters.presupuestos %></div>
     </div>
-    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200 min-w-0">
       <div class="text-xs uppercase tracking-wider text-slate-400">Min. ahorrados</div>
-      <div class="text-xl font-extrabold"><%= counters.minutos_ahorrados %></div>
+      <div class="text-base sm:text-xl font-extrabold tabular-nums leading-tight"><%= counters.minutos_ahorrados %></div>
     </div>
-    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+    <div class="rounded-xl bg-white p-3 ring-1 ring-slate-200 min-w-0">
       <div class="text-xs uppercase tracking-wider text-slate-400">Cotizado</div>
-      <div class="text-xl font-extrabold">$<%= counters.monto_ars.toLocaleString('es-AR') %></div>
+      <div class="text-base sm:text-xl font-extrabold tabular-nums leading-tight">$<%= counters.monto_ars.toLocaleString('es-AR') %></div>
     </div>
   </div>
 
